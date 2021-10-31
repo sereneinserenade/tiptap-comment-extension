@@ -25,11 +25,6 @@ declare module '@tiptap/core' {
   }
 }
 
-// export const starInputRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))$/
-// export const starPasteRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))/g
-// export const underscoreInputRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))$/
-// export const underscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g
-
 export const Comment = Mark.create<CommentOptions>({
   name: 'comment',
 
@@ -91,10 +86,4 @@ export const Comment = Mark.create<CommentOptions>({
       }),
     ];
   },
-
-  // addKeyboardShortcuts() {
-  //   return {
-  //     'Mod-b': () => this.editor.commands.toggleComment(),
-  //   }
-  // },
 });
