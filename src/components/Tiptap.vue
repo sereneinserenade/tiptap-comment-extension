@@ -1,20 +1,15 @@
 <template>
   <div class="tiptap">
     <div class="menubar">
-      <button @click="setComment">
-        Add comment
-      </button>
-      <input @keypress.enter="setComment" type="textarea" v-model="commentText" />
-
       <button @click="getHtml">
         html
       </button>
     </div>
 
     <BubbleMenu
-      v-if="editor"
+      v-if="tiptapEditor"
       :tippy-options="{ duration: 100, placement: 'bottom' }"
-      :editor="editor"
+      :editor="tiptapEditor"
       class="bubble-menu"
     >
       <section v-if="showComment" class="comment-section">
@@ -46,9 +41,14 @@
           @keypress.enter="setComment"
         />
       </section>
+      <section class="comment-adder-section" v-else>
+        <textarea v-model="commentText" @keypress.enter.stop.prevent="setComment" cols="30" rows="10" placeholder="Add comment..." />
+
+        <button @click="setComment">add comment</button>
+      </section>
     </BubbleMenu>
 
-    <editor-content :editor="editor" />
+    <editor-content :editor="tiptapEditor" />
   </div>
 </template>
 
@@ -57,7 +57,9 @@ import { ref } from 'vue';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import format from 'date-fns/format';
+
 import { Comment } from './extension/comment';
+/* imports over */
 
 const dateTimeFormat = 'dd.MM.yyyy HH:mm';
 
@@ -103,7 +105,7 @@ const setComment = () => {
       .run();
   }
 
-  commentText.value = '';
+  setTimeout(() => commentText.value = '', 50);
 };
 
 const getHtml = () => console.log(tiptapEditor.value.getHTML());
@@ -119,7 +121,7 @@ const getHtml = () => console.log(tiptapEditor.value.getHTML());
     border-radius: 6px;
 
     article.comment {
-      padding: 1em;
+      padding: 0.5em;
       display: flex;
       flex-direction: column;
 
@@ -133,12 +135,25 @@ const getHtml = () => console.log(tiptapEditor.value.getHTML());
       }
     }
 
-    .comment-input {
+    textarea {
       padding: 0.5em;
       display: flex;
       border-radius: 6px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
         "Open Sans", "Helvetica Neue", sans-serif;
+    }
+  }
+
+  .comment-adder-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: white;
+
+    textarea {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      border-radius: 6px;
+      padding: 0.5em;
     }
   }
 
