@@ -1,5 +1,11 @@
 # tiptap-comment-extension
 
+## demo
+
+
+https://user-images.githubusercontent.com/45892659/139601783-e7e22560-a8f5-408b-84f7-7b5e269f5685.mov
+
+
 ## Project setup
 ```
 npm install
