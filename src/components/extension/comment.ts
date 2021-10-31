@@ -1,34 +1,50 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { getMarkRange, Mark, mergeAttributes } from '@tiptap/vue-3';
+import { Plugin, TextSelection } from 'prosemirror-state';
 
-import { Node } from '@tiptap/core';
-import { VueNodeViewRenderer } from '@tiptap/vue-3';
-import CommentComponent from './CommentComponent.vue';
+export interface CommentOptions {
+  HTMLAttributes: Record<string, any>,
+}
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     comment: {
       /**
-       * @description Set comment for selected text.
+       * Set a comment mark
        */
-      addComment: (comment: string) => ReturnType,
+      setComment: (comment: string) => ReturnType,
+      /**
+       * Toggle a comment mark
+       */
+      toggleComment: () => ReturnType,
+      /**
+       * Unset a comment mark
+       */
+      unsetComment: () => ReturnType,
     }
   }
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export const Comment = Node.create({
+// export const starInputRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))$/
+// export const starPasteRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))/g
+// export const underscoreInputRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))$/
+// export const underscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g
+
+export const Comment = Mark.create<CommentOptions>({
   name: 'comment',
 
-  content: 'text*',
-
-  group: 'block',
+  addOptions() {
+    return {
+      HTMLAttributes: {},
+    };
+  },
 
   addAttributes() {
     return {
       comment: {
-        parseHTML: (element) => ({
-          comment: element.getAttribute('data-comment'),
-        }),
+        default: null,
+        parseHTML: (el) => (el as HTMLSpanElement).getAttribute('data-comment'),
+        renderHTML: (attrs) => ({ 'data-comment': attrs.comment }),
       },
     };
   },
@@ -36,26 +52,49 @@ export const Comment = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'comment',
-        getAttrs: (node) => {
-          const comment = (node as HTMLElement).getAttribute('data-comment');
-          return comment ? { comment } : false;
-        },
+        tag: 'span[data-comment]',
+        getAttrs: (el) => !!(el as HTMLSpanElement).getAttribute('data-comment')?.trim() && null,
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['comment', HTMLAttributes, 0];
+    return ['span', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
   },
 
   addCommands() {
     return {
-      addComment: (comment: string) => ({ commands }) => commands.setNode('comment', { comment }),
+      setComment: (comment: string) => ({ commands }) => commands.setMark('comment', { comment }),
+      toggleComment: () => ({ commands }) => commands.toggleMark('comment'),
+      unsetComment: () => ({ commands }) => commands.unsetMark('comment'),
     };
   },
 
-  addNodeView() {
-    return VueNodeViewRenderer(CommentComponent as any);
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({
+        props: {
+          handleClick(view, pos) {
+            const { schema, doc, tr } = view.state;
+
+            const range = getMarkRange(doc.resolve(pos), schema.marks.comment);
+
+            if (!range) return false;
+
+            const [$start, $end] = [doc.resolve(range.from), doc.resolve(range.to)];
+
+            view.dispatch(tr.setSelection(new TextSelection($start, $end)));
+
+            return true;
+          },
+        },
+      }),
+    ];
   },
+
+  // addKeyboardShortcuts() {
+  //   return {
+  //     'Mod-b': () => this.editor.commands.toggleComment(),
+  //   }
+  // },
 });

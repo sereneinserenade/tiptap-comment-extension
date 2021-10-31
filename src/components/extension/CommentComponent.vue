@@ -1,9 +1,9 @@
 <template>
   <node-view-wrapper
     class="comment"
-    :class="{ show: showContent }"
+    :class="{ show: isCommentOpen }"
     spellcheck="false"
-    ref="comment"
+    ref="commentj"
     contenteditable="false"
   >
     <node-view-content
@@ -51,6 +51,7 @@ export default defineComponent({
 <style lang="scss">
 .comment {
   .content {
+    display: inline;
     cursor: pointer;
     background: rgba(0, 128, 0, 0.1);
   }
@@ -61,6 +62,8 @@ export default defineComponent({
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     border-radius: 6px;
     padding: 0.5em;
+    z-index: 1000;
+    background: white;
 
     &.show {
       display: flex;

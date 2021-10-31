@@ -1,54 +1,158 @@
 <template>
   <div class="tiptap">
     <div class="menubar">
-      <button @click="addComment">
+      <button @click="setComment">
         Add comment
       </button>
-      <input @keypress.enter="addComment" type="textarea" v-model="commentText" />
+      <input @keypress.enter="setComment" type="textarea" v-model="commentText" />
+
+      <button @click="getHtml">
+        html
+      </button>
     </div>
+
+    <BubbleMenu
+      v-if="editor"
+      :tippy-options="{ duration: 100, placement: 'bottom' }"
+      :editor="editor"
+      class="bubble-menu"
+    >
+      <section v-if="showComment" class="comment-section">
+        <article
+          class="comment"
+          v-for="comment in activeComments"
+          :key="`${comment.userName}_${comment.time}`"
+        >
+          <div class="comment-details">
+            <strong>
+              {{ comment.userName }}
+            </strong>
+
+            <span class="date-time">
+              {{ formatDate(comment.time) }}
+            </span>
+          </div>
+
+          <span class="content">
+            {{ comment.content }}
+          </span>
+        </article>
+
+        <textarea
+          type="textarea"
+          class="comment-input"
+          v-model="commentText"
+          placeholder="add comment..."
+          @keypress.enter="setComment"
+        />
+      </section>
+    </BubbleMenu>
+
     <editor-content :editor="editor" />
   </div>
 </template>
 
-<script>
+<script type="ts" setup>
 import { ref } from 'vue';
-
-import { useEditor, EditorContent } from '@tiptap/vue-3';
+import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
+import format from 'date-fns/format';
 import { Comment } from './extension/comment';
 
-export default {
-  components: {
-    EditorContent,
-  },
+const dateTimeFormat = 'dd.MM.yyyy HH:mm';
 
-  setup() {
-    const editor = useEditor({
-      content: "<p> I'm running Tiptap with Vue.js. 🎉</p>",
-      extensions: [StarterKit, Comment],
-    });
+const formatDate = (d) => format(new Date(d), dateTimeFormat);
 
-    const commentText = ref('Initial Comment');
+const currentUserName = ref('sereneinserenade');
 
-    const addComment = () => (commentText.value.length
-      ? editor.value
-        ?.chain()
-        .addComment(commentText.value)
-        .focus()
-        .run()
-      : false);
+const commentText = ref('');
 
-    return { editor, commentText, addComment };
-  },
+const showComment = ref(false);
+
+const activeComments = ref([]);
+
+const setCommentDetails = (editor) => {
+  showComment.value = editor.isActive('comment');
+
+  const comment = editor.getAttributes('comment')?.comment;
+
+  if (showComment.value) activeComments.value = JSON.parse(comment);
+  else activeComments.value = [];
 };
+
+const tiptapEditor = useEditor({
+  content: '<p>I\'m trying to make comment <span data-comment="[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1635693990145,&quot;content&quot;:&quot;Initial Comment&quot;}]">extension</span>, so you can add comment here ☮️ and see how it goes.</p> ',
+
+  extensions: [StarterKit, Comment],
+
+  onUpdate({ editor }) {
+    setCommentDetails(editor);
+  },
+
+  onSelectionUpdate({ editor }) {
+    setCommentDetails(editor);
+  },
+});
+
+const setComment = () => {
+  if (commentText.value.length) {
+    // eslint-disable-next-line no-unused-expressions
+    tiptapEditor.value
+      ?.chain()
+      .setComment(JSON.stringify([...activeComments.value, { userName: currentUserName.value, time: Date.now(), content: commentText.value }]))
+      .run();
+  }
+
+  commentText.value = '';
+};
+
+const getHtml = () => console.log(tiptapEditor.value.getHTML());
 </script>
 
 <style lang="scss">
 .tiptap {
   height: 100vh;
 
+  .comment-section {
+    background: white;
+    box-shadow: 0 0 5px grey;
+    border-radius: 6px;
+
+    article.comment {
+      padding: 1em;
+      display: flex;
+      flex-direction: column;
+
+      .comment-details {
+        display: flex;
+        flex-direction: column;
+        margin: 0 0 8px 0;
+        .date-time {
+          font-size: 0.7em;
+        }
+      }
+    }
+
+    .comment-input {
+      padding: 0.5em;
+      display: flex;
+      border-radius: 6px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+        "Open Sans", "Helvetica Neue", sans-serif;
+    }
+  }
+
   .ProseMirror {
     outline: none !important;
+
+    span[data-comment] {
+      background: rgba(172, 255, 47, 0.5);
+
+      &::after {
+        content: " 💬";
+        user-select: all;
+      }
+    }
   }
 }
 </style>
