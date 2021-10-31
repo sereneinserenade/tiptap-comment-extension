@@ -42,7 +42,13 @@
         />
       </section>
       <section class="comment-adder-section" v-else>
-        <textarea v-model="commentText" @keypress.enter.stop.prevent="setComment" cols="30" rows="10" placeholder="Add comment..." />
+        <textarea
+          v-model="commentText"
+          @keypress.enter.stop.prevent="setComment"
+          cols="30"
+          rows="10"
+          placeholder="Add comment..."
+        />
 
         <button @click="setComment">add comment</button>
       </section>
@@ -78,8 +84,8 @@ const setCommentDetails = (editor) => {
 
   const comment = editor.getAttributes('comment')?.comment;
 
-  if (showComment.value) activeComments.value = JSON.parse(comment);
-  else activeComments.value = [];
+  // eslint-disable-next-line no-unused-expressions
+  showComment.value ? activeComments.value = JSON.parse(comment) : activeComments.value = [];
 };
 
 const tiptapEditor = useEditor({
@@ -151,7 +157,8 @@ const getHtml = () => console.log(tiptapEditor.value.getHTML());
     background: white;
 
     textarea {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+        "Open Sans", "Helvetica Neue", sans-serif;
       border-radius: 6px;
       padding: 0.5em;
     }
