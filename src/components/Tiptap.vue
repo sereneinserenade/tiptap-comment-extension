@@ -1,20 +1,14 @@
 <template>
-  <div class="tiptap">
-    <div class="menubar">
-      <button @click="getHtml">
-        html
-      </button>
-    </div>
-
+  <div class="tiptap mt-12">
     <BubbleMenu
       v-if="tiptapEditor"
       :tippy-options="{ duration: 100, placement: 'bottom' }"
       :editor="tiptapEditor"
       class="bubble-menu"
     >
-      <section v-if="showComment" class="comment-section">
+      <section v-if="showComment" class="comment-section w-[200px]">
         <article
-          class="comment"
+          class="comment w-80"
           v-for="comment in activeComments"
           :key="`${comment.userName}_${comment.time}`"
         >
@@ -35,22 +29,29 @@
 
         <textarea
           type="textarea"
-          class="comment-input"
+          class="comment-input resize-none border-gray-500"
           v-model="commentText"
-          placeholder="add comment..."
+          placeholder="Add comment..."
           @keypress.enter="setComment"
+          ref="textAreaRef"
         />
       </section>
-      <section class="comment-adder-section" v-else>
+      <section class="comment-adder-section bg-white " v-else>
         <textarea
           v-model="commentText"
           @keypress.enter.stop.prevent="setComment"
           cols="30"
           rows="10"
           placeholder="Add comment..."
+          class="shadow-lg border-none outline-none"
         />
 
-        <button @click="setComment">add comment</button>
+        <button
+          class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-lg"
+          @click="setComment"
+        >
+          add comment
+        </button>
       </section>
     </BubbleMenu>
 
@@ -113,13 +114,13 @@ const setComment = () => {
 
   setTimeout(() => commentText.value = '', 50);
 };
-
-const getHtml = () => console.log(tiptapEditor.value.getHTML());
 </script>
 
 <style lang="scss">
 .tiptap {
   height: 100vh;
+  display: flex;
+  justify-content: center;
 
   .comment-section {
     background: white;
@@ -147,6 +148,7 @@ const getHtml = () => console.log(tiptapEditor.value.getHTML());
       border-radius: 6px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
         "Open Sans", "Helvetica Neue", sans-serif;
+      width: 100%;
     }
   }
 
