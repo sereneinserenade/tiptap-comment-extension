@@ -6,19 +6,17 @@
           @click="toggleCommentMode"
           type="button"
           class="
-            text-white
-            bg-blue-700
-            hover:bg-blue-800
-            focus:ring-4 focus:ring-blue-300
-            font-medium
-            rounded-lg
-            text-sm
-            px-5
-            py-2.5
-            text-center
-            mr-3
-            mb-3
-            dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+              bg-transparent
+              hover:bg-blue-500
+              text-blue-700
+              font-semibold
+              hover:text-white
+              py-2
+              px-4
+              border border-blue-500
+              hover:border-transparent
+              rounded
+              shadow-lg
           "
         >
           {{ isCommentModeOn ? "Comment mode ON" : "Comment mode OFF" }}
@@ -38,9 +36,9 @@
         class="bubble-menu"
         :shouldShow="() => isCommentModeOn"
       >
-        <section v-if="showCommentMenu" class="comment-section w-[200px]">
+        <section v-if="showCommentMenu" class="comment-section shadow-lg bg-gray-100 rounded-md">
           <article
-            class="comment w-80"
+            class="comment w-80 border-b-2"
             v-for="comment in activeComments"
             :key="`${comment.userName}_${comment.time}`"
           >
@@ -61,7 +59,7 @@
 
           <textarea
             type="textarea"
-            class="comment-input resize-none border-gray-500"
+            class="comment-input resize-y focus:outline-none rounded-none"
             v-model="commentText"
             placeholder="Add comment..."
             @keypress.enter="setComment"
@@ -71,35 +69,60 @@
 
         <section
           v-if="showAddCommentSection && !showCommentMenu"
-          class="comment-adder-section bg-white"
+          class="comment-adder-section bg-white shadow-lg"
         >
           <textarea
             v-model="commentText"
             @keypress.enter.stop.prevent="setComment"
             cols="30"
-            rows="10"
+            rows="4"
             placeholder="Add comment..."
-            class="shadow-lg border-none outline-none"
+            class="border-none outline-none"
           />
 
-          <button
-            class="
-              bg-transparent
-              hover:bg-blue-500
-              text-blue-700
-              font-semibold
-              hover:text-white
-              py-2
-              px-4
-              border border-blue-500
-              hover:border-transparent
-              rounded
-              shadow-lg
-            "
-            @click="setComment"
-          >
-            add comment
-          </button>
+          <section class="flex flex-row w-full gap-1">
+            <button
+              class="
+                bg-transparent
+                hover:bg-red-500
+                text-red-700
+                font-semibold
+                hover:text-white
+                py-2
+                px-4
+                border border-red-500
+                hover:border-transparent
+                rounded
+                shadow-lg
+                w-1/3
+              "
+              @click="() => commentText = ''"
+            >
+              Clear
+            </button>
+
+            <button
+              class="
+                bg-transparent
+                hover:bg-blue-500
+                text-blue-700
+                font-semibold
+                hover:text-white
+                py-2
+                px-4
+                border border-blue-500
+                hover:border-transparent
+                rounded
+                shadow-lg
+                w-2/3
+              "
+              @click="setComment"
+            >
+              Add
+            </button>
+
+          </section>
+
         </section>
       </BubbleMenu>
     </div>
@@ -132,7 +155,7 @@
 </template>
 
 <script setup type="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import format from 'date-fns/format';
@@ -152,7 +175,7 @@ const showCommentMenu = ref(false);
 
 // const showComment = ref(false);
 
-const isCommentModeOn = ref(true);
+const isCommentModeOn = ref(false);
 
 const showAddCommentSection = ref(true);
 
@@ -187,7 +210,8 @@ const findCommentsAndStoreValues = () => {
 
 const setCurrentComment = (editor) => {
   const newVal = editor.isActive('comment');
-  setTimeout(() => showCommentMenu.value = newVal, 200);
+
+  setTimeout(() => showCommentMenu.value = newVal, 50);
 
   showAddCommentSection.value = !editor.state.selection.empty;
 
@@ -210,10 +234,16 @@ const tiptapEditor = useEditor({
   onSelectionUpdate({ editor }) {
     setCurrentComment(editor);
   },
+
+  editorProps: {
+    attributes: {
+      spellcheck: 'false',
+    },
+  },
 });
 
 const setComment = () => {
-  if (!commentText.value.length) return;
+  if (!commentText.value.trim().length) return;
 
   const comment = JSON.stringify([
     ...activeComments.value,
@@ -235,15 +265,13 @@ const toggleCommentMode = () => {
   if (isCommentModeOn.value) tiptapEditor.value.setEditable(false);
   else tiptapEditor.value.setEditable(true);
 };
+
+onMounted(() => setTimeout(findCommentsAndStoreValues, 100));
 </script>
 
 <style lang="scss">
 .tiptap {
   .comment-section {
-    background: white;
-    box-shadow: 0 0 5px grey;
-    border-radius: 6px;
-
     article.comment {
       padding: 0.5em;
       display: flex;
