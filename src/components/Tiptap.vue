@@ -1,17 +1,116 @@
 <template>
-  <div class="tiptap mt-12">
-    <BubbleMenu
-      v-if="tiptapEditor"
-      :tippy-options="{ duration: 100, placement: 'bottom' }"
-      :editor="tiptapEditor"
-      class="bubble-menu"
-    >
-      <section v-if="showComment" class="comment-section w-[200px]">
-        <article
-          class="comment w-80"
-          v-for="comment in activeComments"
-          :key="`${comment.userName}_${comment.time}`"
+  <div class="flex flex-row justify-center tiptap">
+    <div class="flex max-w-screen-md flex-col">
+      <section>
+        <button
+          @click="toggleCommentMode"
+          type="button"
+          class="
+            text-white
+            bg-blue-700
+            hover:bg-blue-800
+            focus:ring-4 focus:ring-blue-300
+            font-medium
+            rounded-lg
+            text-sm
+            px-5
+            py-2.5
+            text-center
+            mr-3
+            mb-3
+            dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800
+          "
         >
+          {{ isCommentModeOn ? "Comment mode ON" : "Comment mode OFF" }}
+        </button>
+      </section>
+
+      <br />
+
+      <section class="">
+        <editor-content :editor="tiptapEditor" />
+      </section>
+
+      <BubbleMenu
+        v-if="tiptapEditor"
+        :tippy-options="{ duration: 100, placement: 'bottom' }"
+        :editor="tiptapEditor"
+        class="bubble-menu"
+        :shouldShow="() => isCommentModeOn"
+      >
+        <section v-if="showCommentMenu" class="comment-section w-[200px]">
+          <article
+            class="comment w-80"
+            v-for="comment in activeComments"
+            :key="`${comment.userName}_${comment.time}`"
+          >
+            <div class="comment-details">
+              <strong>
+                {{ comment.userName }}
+              </strong>
+
+              <span class="date-time">
+                {{ formatDate(comment.time) }}
+              </span>
+            </div>
+
+            <span class="content">
+              {{ comment.content }}
+            </span>
+          </article>
+
+          <textarea
+            type="textarea"
+            class="comment-input resize-none border-gray-500"
+            v-model="commentText"
+            placeholder="Add comment..."
+            @keypress.enter="setComment"
+            ref="textAreaRef"
+          />
+        </section>
+
+        <section
+          v-if="showAddCommentSection && !showCommentMenu"
+          class="comment-adder-section bg-white"
+        >
+          <textarea
+            v-model="commentText"
+            @keypress.enter.stop.prevent="setComment"
+            cols="30"
+            rows="10"
+            placeholder="Add comment..."
+            class="shadow-lg border-none outline-none"
+          />
+
+          <button
+            class="
+              bg-transparent
+              hover:bg-blue-500
+              text-blue-700
+              font-semibold
+              hover:text-white
+              py-2
+              px-4
+              border border-blue-500
+              hover:border-transparent
+              rounded
+              shadow-lg
+            "
+            @click="setComment"
+          >
+            add comment
+          </button>
+        </section>
+      </BubbleMenu>
+    </div>
+
+    <section class="docs-like-comments-section">
+      <article
+        class="comment external-comment"
+        v-for="(comment, i) in allComments"
+        :key="i + 'external_comment'"
+      >
+        <article class="">
           <div class="comment-details">
             <strong>
               {{ comment.userName }}
@@ -26,40 +125,13 @@
             {{ comment.content }}
           </span>
         </article>
-
-        <textarea
-          type="textarea"
-          class="comment-input resize-none border-gray-500"
-          v-model="commentText"
-          placeholder="Add comment..."
-          @keypress.enter="setComment"
-          ref="textAreaRef"
-        />
-      </section>
-      <section class="comment-adder-section bg-white " v-else>
-        <textarea
-          v-model="commentText"
-          @keypress.enter.stop.prevent="setComment"
-          cols="30"
-          rows="10"
-          placeholder="Add comment..."
-          class="shadow-lg border-none outline-none"
-        />
-
-        <button
-          class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-lg"
-          @click="setComment"
-        >
-          add comment
-        </button>
-      </section>
-    </BubbleMenu>
-
-    <editor-content :editor="tiptapEditor" />
+      </article>
+      <!-- </article> -->
+    </section>
   </div>
 </template>
 
-<script type="ts" setup>
+<script setup type="ts">
 import { ref } from 'vue';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
@@ -70,58 +142,103 @@ import { Comment } from './extension/comment';
 
 const dateTimeFormat = 'dd.MM.yyyy HH:mm';
 
-const formatDate = (d) => format(new Date(d), dateTimeFormat);
+const formatDate = (d) => (d ? format(new Date(d), dateTimeFormat) : null);
 
 const currentUserName = ref('sereneinserenade');
 
 const commentText = ref('');
 
-const showComment = ref(false);
+const showCommentMenu = ref(false);
+
+// const showComment = ref(false);
+
+const isCommentModeOn = ref(true);
+
+const showAddCommentSection = ref(true);
 
 const activeComments = ref([]);
 
-const setCommentDetails = (editor) => {
-  showComment.value = editor.isActive('comment');
+const allComments = ref([]);
 
-  const comment = editor.getAttributes('comment')?.comment;
+const findCommentsAndStoreValues = () => {
+  const proseMirror = document.querySelector('.ProseMirror');
 
-  // eslint-disable-next-line no-unused-expressions
-  showComment.value ? activeComments.value = JSON.parse(comment) : activeComments.value = [];
+  const comments = proseMirror.querySelectorAll('span[data-comment]');
+
+  const tempComments = [];
+
+  comments.forEach((node) => {
+    const nodeComments = node.getAttribute('data-comment');
+
+    const jsonComments = nodeComments ? JSON.parse(nodeComments) : null;
+
+    if (jsonComments !== null) {
+      tempComments.push({
+        node,
+        jsonComments,
+      });
+    }
+  });
+
+  // debugger;
+
+  allComments.value = tempComments;
+};
+
+const setCurrentComment = (editor) => {
+  const newVal = editor.isActive('comment');
+  setTimeout(() => showCommentMenu.value = newVal, 200);
+
+  showAddCommentSection.value = !editor.state.selection.empty;
+
+  if (newVal) activeComments.value = JSON.parse(editor.getAttributes('comment').comment);
+  else activeComments.value = [];
 };
 
 const tiptapEditor = useEditor({
-  content: '<p>I\'m trying to make comment <span data-comment="[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1635693990145,&quot;content&quot;:&quot;Initial Comment&quot;}]">extension</span>, so you can add comment here ☮️ and see how it goes.</p> ',
+  content:
+    '<p>I\'m trying to make comment <span data-comment="[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1635693990145,&quot;content&quot;:&quot;Initial Comment&quot;}]">extension</span>, so you can add comment here ☮️ and see how it goes.</p> ',
 
   extensions: [StarterKit, Comment],
 
   onUpdate({ editor }) {
-    setCommentDetails(editor);
+    findCommentsAndStoreValues();
+
+    setCurrentComment(editor);
   },
 
   onSelectionUpdate({ editor }) {
-    setCommentDetails(editor);
+    setCurrentComment(editor);
   },
 });
 
 const setComment = () => {
-  if (commentText.value.length) {
-    // eslint-disable-next-line no-unused-expressions
-    tiptapEditor.value
-      ?.chain()
-      .setComment(JSON.stringify([...activeComments.value, { userName: currentUserName.value, time: Date.now(), content: commentText.value }]))
-      .run();
-  }
+  if (!commentText.value.length) return;
 
-  setTimeout(() => commentText.value = '', 50);
+  const comment = JSON.stringify([
+    ...activeComments.value,
+    {
+      userName: currentUserName.value,
+      time: Date.now(),
+      content: commentText.value,
+    },
+  ]);
+
+  // eslint-disable-next-line no-unused-expressions
+  tiptapEditor.value?.chain().setComment(comment).run();
+
+  setTimeout(() => (commentText.value = ''), 50);
+};
+
+const toggleCommentMode = () => {
+  isCommentModeOn.value = !isCommentModeOn.value;
+  if (isCommentModeOn.value) tiptapEditor.value.setEditable(false);
+  else tiptapEditor.value.setEditable(true);
 };
 </script>
 
 <style lang="scss">
 .tiptap {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-
   .comment-section {
     background: white;
     box-shadow: 0 0 5px grey;
@@ -146,8 +263,8 @@ const setComment = () => {
       padding: 0.5em;
       display: flex;
       border-radius: 6px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
-        "Open Sans", "Helvetica Neue", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       width: 100%;
     }
   }
@@ -159,8 +276,8 @@ const setComment = () => {
     background: white;
 
     textarea {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
-        "Open Sans", "Helvetica Neue", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       border-radius: 6px;
       padding: 0.5em;
     }
@@ -168,6 +285,10 @@ const setComment = () => {
 
   .ProseMirror {
     outline: none !important;
+
+    &:focus {
+      outline: none !important;
+    }
 
     span[data-comment] {
       background: rgba(172, 255, 47, 0.5);
