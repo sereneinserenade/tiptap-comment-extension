@@ -6,20 +6,39 @@
           @click="toggleCommentMode"
           type="button"
           class="
-              bg-transparent
-              hover:bg-blue-500
-              text-blue-700
-              font-semibold
-              hover:text-white
-              py-2
-              px-4
-              border border-blue-500
-              hover:border-transparent
-              rounded
-              shadow-lg
+            bg-transparent
+            hover:bg-blue-500
+            text-blue-700
+            font-semibold
+            hover:text-white
+            py-2
+            px-4
+            border border-blue-500
+            hover:border-transparent
+            rounded
+            shadow-lg
           "
         >
           {{ isCommentModeOn ? "Comment mode ON" : "Comment mode OFF" }}
+        </button>
+        <button
+          @click="log(tiptapEditor.getHTML())"
+          type="button"
+          class="
+            bg-transparent
+            hover:bg-blue-500
+            text-blue-700
+            font-semibold
+            hover:text-white
+            py-2
+            px-4
+            border border-blue-500
+            hover:border-transparent
+            rounded
+            shadow-lg
+          "
+        >
+          HTML to Console
         </button>
       </section>
 
@@ -36,7 +55,10 @@
         class="bubble-menu"
         :shouldShow="() => isCommentModeOn"
       >
-        <section v-if="showCommentMenu" class="comment-section shadow-lg bg-gray-100 rounded-md">
+        <section
+          v-if="showCommentMenu"
+          class="comment-section shadow-lg bg-gray-100 rounded-md"
+        >
           <article
             class="comment w-80 border-b-2"
             v-for="comment in activeComments"
@@ -96,7 +118,7 @@
                 shadow-lg
                 w-1/3
               "
-              @click="() => commentText = ''"
+              @click="() => (commentText = '')"
             >
               Clear
             </button>
@@ -120,32 +142,34 @@
             >
               Add
             </button>
-
           </section>
-
         </section>
       </BubbleMenu>
     </div>
 
-    <section class="docs-like-comments-section">
+    <section class="flex flex-col w-1/5">
       <article
-        class="comment external-comment"
+        class="comment external-comment shadow-lg my-2 bg-gray-100"
         v-for="(comment, i) in allComments"
         :key="i + 'external_comment'"
       >
-        <article class="">
+        <article
+          v-for="(jsonComment, j) in comment.jsonComments"
+          :key="`${j}_${Math.random()}`"
+          class="border-b-2 border-gray-200 p-3"
+        >
           <div class="comment-details">
             <strong>
-              {{ comment.userName }}
+              {{ jsonComment.userName }}
             </strong>
 
-            <span class="date-time">
-              {{ formatDate(comment.time) }}
+            <span class="ml-1 date-time text-xs">
+              {{ formatDate(jsonComment.time) }}
             </span>
           </div>
 
           <span class="content">
-            {{ comment.content }}
+            {{ jsonComment.content }}
           </span>
         </article>
       </article>
@@ -154,9 +178,11 @@
   </div>
 </template>
 
-<script setup type="ts">
+<script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
+import {
+  useEditor, EditorContent, BubbleMenu, Editor,
+} from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import format from 'date-fns/format';
 
@@ -165,7 +191,7 @@ import { Comment } from './extension/comment';
 
 const dateTimeFormat = 'dd.MM.yyyy HH:mm';
 
-const formatDate = (d) => (d ? format(new Date(d), dateTimeFormat) : null);
+const formatDate = (d: any) => (d ? format(new Date(d), dateTimeFormat) : null);
 
 const currentUserName = ref('sereneinserenade');
 
@@ -181,14 +207,19 @@ const showAddCommentSection = ref(true);
 
 const activeComments = ref([]);
 
-const allComments = ref([]);
+const allComments = ref<any[]>([]);
 
 const findCommentsAndStoreValues = () => {
   const proseMirror = document.querySelector('.ProseMirror');
 
-  const comments = proseMirror.querySelectorAll('span[data-comment]');
+  const comments = proseMirror?.querySelectorAll('span[data-comment]');
 
-  const tempComments = [];
+  const tempComments: any[] = [];
+
+  if (!comments) {
+    allComments.value = [];
+    return;
+  }
 
   comments.forEach((node) => {
     const nodeComments = node.getAttribute('data-comment');
@@ -203,25 +234,24 @@ const findCommentsAndStoreValues = () => {
     }
   });
 
-  // debugger;
-
   allComments.value = tempComments;
 };
 
-const setCurrentComment = (editor) => {
+const { log } = console;
+
+const setCurrentComment = (editor: any) => {
   const newVal = editor.isActive('comment');
 
-  setTimeout(() => showCommentMenu.value = newVal, 50);
+  setTimeout(() => (showCommentMenu.value = newVal), 50);
 
   showAddCommentSection.value = !editor.state.selection.empty;
 
-  if (newVal) activeComments.value = JSON.parse(editor.getAttributes('comment').comment);
-  else activeComments.value = [];
+  if (newVal) { activeComments.value = JSON.parse(editor.getAttributes('comment').comment); } else activeComments.value = [];
 };
 
 const tiptapEditor = useEditor({
   content:
-    '<p>I\'m trying to make comment <span data-comment="[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1635693990145,&quot;content&quot;:&quot;Initial Comment&quot;}]">extension</span>, so you can add comment here ☮️ and see how it goes.</p> ',
+    '<p>I\'m trying to make comment <span data-comment="[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1635693990145,&quot;content&quot;:&quot;Initial Comment&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639101658784,&quot;content&quot;:&quot;Second comment&quot;}]">extension</span>, so you can add <span data-comment="[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639101673680,&quot;content&quot;:&quot;Adding a new comment here&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639101686073,&quot;content&quot;:&quot;So it should show up somewhere here&quot;}]">comment</span> here ☮️ and see how it goes.</p>',
 
   extensions: [StarterKit, Comment],
 
