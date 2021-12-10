@@ -180,9 +180,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import {
-  useEditor, EditorContent, BubbleMenu, Editor,
-} from '@tiptap/vue-3';
+import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import format from 'date-fns/format';
 
@@ -205,7 +203,7 @@ const isCommentModeOn = ref(false);
 
 const showAddCommentSection = ref(true);
 
-const activeComments = ref([]);
+const activeComments = ref<any[]>([]);
 
 const allComments = ref<any[]>([]);
 
