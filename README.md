@@ -2,9 +2,7 @@
 
 ## demo
 
-
-https://user-images.githubusercontent.com/45892659/139601783-e7e22560-a8f5-408b-84f7-7b5e269f5685.mov
-
+https://user-images.githubusercontent.com/45892659/145692849-a73b6a60-8f64-4cfb-926e-7bb2f7671e9f.mov
 
 ## Project setup
 ```
