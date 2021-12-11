@@ -1,94 +1,31 @@
 <template>
-  <div class="flex flex-row justify-center tiptap">
-    <div class="flex max-w-screen-md flex-col">
+  <div class="m-4 flex flex-row tiptap">
+    <div class="ml-4 flex flex-col tiptap-container">
       <section>
         <button
           @click="toggleCommentMode"
           type="button"
-          class="
-            bg-transparent
-            hover:bg-blue-500
-            text-blue-700
-            font-semibold
-            hover:text-white
-            py-2
-            px-4
-            border border-blue-500
-            hover:border-transparent
-            rounded
-            shadow-lg
-          "
+          class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-lg"
         >
           {{ isCommentModeOn ? "Comment mode ON" : "Comment mode OFF" }}
         </button>
         <button
           @click="log(tiptapEditor.getHTML())"
           type="button"
-          class="
-            bg-transparent
-            hover:bg-blue-500
-            text-blue-700
-            font-semibold
-            hover:text-white
-            py-2
-            px-4
-            border border-blue-500
-            hover:border-transparent
-            rounded
-            shadow-lg
-          "
-        >
-          HTML to Console
-        </button>
+          class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-lg"
+        >HTML to Console</button>
       </section>
 
-      <br />
-
-      <section class="">
+      <section class="mt-6">
         <editor-content :editor="tiptapEditor" />
       </section>
 
       <BubbleMenu
-        v-if="tiptapEditor"
+        v-if="isCommentModeOn"
         :tippy-options="{ duration: 100, placement: 'bottom' }"
         :editor="tiptapEditor"
         class="bubble-menu"
-        :shouldShow="() => isCommentModeOn"
       >
-        <section
-          v-if="showCommentMenu"
-          class="comment-section shadow-lg bg-gray-100 rounded-md"
-        >
-          <article
-            class="comment w-80 border-b-2"
-            v-for="comment in activeComments"
-            :key="`${comment.userName}_${comment.time}`"
-          >
-            <div class="comment-details">
-              <strong>
-                {{ comment.userName }}
-              </strong>
-
-              <span class="date-time">
-                {{ formatDate(comment.time) }}
-              </span>
-            </div>
-
-            <span class="content">
-              {{ comment.content }}
-            </span>
-          </article>
-
-          <textarea
-            type="textarea"
-            class="comment-input resize-y focus:outline-none rounded-none"
-            v-model="commentText"
-            placeholder="Add comment..."
-            @keypress.enter="setComment"
-            ref="textAreaRef"
-          />
-        </section>
-
         <section
           v-if="showAddCommentSection && !showCommentMenu"
           class="comment-adder-section bg-white shadow-lg"
@@ -104,76 +41,67 @@
 
           <section class="flex flex-row w-full gap-1">
             <button
-              class="
-                bg-transparent
-                hover:bg-red-500
-                text-red-700
-                font-semibold
-                hover:text-white
-                py-2
-                px-4
-                border border-red-500
-                hover:border-transparent
-                rounded
-                shadow-lg
-                w-1/3
-              "
+              class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded shadow-lg w-1/3"
+              @click="() => (commentText = '')"
+            >Clear</button>
+
+            <button
+              class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-lg w-2/3"
+              @click="setComment"
+            >Add</button>
+          </section>
+        </section>
+      </BubbleMenu>
+    </div>
+
+    <section class="flex flex-col">
+      <article
+        class="comment external-comment shadow-lg my-2 bg-gray-100 transition-all"
+        v-for="(comment, i) in allComments"
+        :key="i + 'external_comment'"
+        :class="[`${comment.jsonComments.uuid === activeCommentsInstance.uuid ? 'ml-4' : 'ml-8'}`]"
+      >
+        <article
+          v-for="(jsonComment, j) in comment.jsonComments.comments"
+          :key="`${j}_${Math.random()}`"
+          class="external-comment border-b-2 border-gray-200 p-3"
+        >
+          <div class="comment-details">
+            <strong>{{ jsonComment.userName }}</strong>
+
+            <span class="ml-1 date-time text-xs">{{ formatDate(jsonComment.time) }}</span>
+          </div>
+
+          <span class="content">{{ jsonComment.content }}</span>
+        </article>
+
+        <section v-if="comment.jsonComments.uuid === activeCommentsInstance.uuid" class="flex flex-col w-full gap-1">
+          <textarea
+            v-model="commentText"
+            @keypress.enter.stop.prevent="setComment"
+            cols="30"
+            rows="3"
+            placeholder="Add comment..."
+            class="p-3 border-none outline-none"
+          />
+
+          <section class="flex flex-row w-full gap-1">
+            <button
+              class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded shadow-lg w-1/3"
               @click="() => (commentText = '')"
             >
               Clear
             </button>
 
             <button
-              class="
-                bg-transparent
-                hover:bg-blue-500
-                text-blue-700
-                font-semibold
-                hover:text-white
-                py-2
-                px-4
-                border border-blue-500
-                hover:border-transparent
-                rounded
-                shadow-lg
-                w-2/3
-              "
+              class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-lg w-2/3"
               @click="setComment"
             >
-              Add
+              Add (<kbd class="">Ent</kbd>)
             </button>
           </section>
         </section>
-      </BubbleMenu>
-    </div>
-
-    <section class="flex flex-col w-1/5">
-      <article
-        class="comment external-comment shadow-lg my-2 bg-gray-100"
-        v-for="(comment, i) in allComments"
-        :key="i + 'external_comment'"
-      >
-        <article
-          v-for="(jsonComment, j) in comment.jsonComments"
-          :key="`${j}_${Math.random()}`"
-          class="border-b-2 border-gray-200 p-3"
-        >
-          <div class="comment-details">
-            <strong>
-              {{ jsonComment.userName }}
-            </strong>
-
-            <span class="ml-1 date-time text-xs">
-              {{ formatDate(jsonComment.time) }}
-            </span>
-          </div>
-
-          <span class="content">
-            {{ jsonComment.content }}
-          </span>
-        </article>
       </article>
-      <!-- </article> -->
     </section>
   </div>
 </template>
@@ -183,6 +111,7 @@ import { onMounted, ref } from 'vue';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
 import StarterKit from '@tiptap/starter-kit';
 import format from 'date-fns/format';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Comment } from './extension/comment';
 /* imports over */
@@ -197,13 +126,16 @@ const commentText = ref('');
 
 const showCommentMenu = ref(false);
 
-// const showComment = ref(false);
-
 const isCommentModeOn = ref(false);
 
 const showAddCommentSection = ref(true);
 
-const activeComments = ref<any[]>([]);
+interface CommentInstance {
+  uuid?: string
+  comments?: any[]
+}
+
+const activeCommentsInstance = ref<CommentInstance>({});
 
 const allComments = ref<any[]>([]);
 
@@ -240,16 +172,23 @@ const { log } = console;
 const setCurrentComment = (editor: any) => {
   const newVal = editor.isActive('comment');
 
-  setTimeout(() => (showCommentMenu.value = newVal), 50);
+  if (newVal) {
+    setTimeout(() => (showCommentMenu.value = newVal), 50);
 
-  showAddCommentSection.value = !editor.state.selection.empty;
+    showAddCommentSection.value = !editor.state.selection.empty;
 
-  if (newVal) { activeComments.value = JSON.parse(editor.getAttributes('comment').comment); } else activeComments.value = [];
+    const parsedComment = JSON.parse(editor.getAttributes('comment').comment);
+
+    parsedComment.comment = typeof parsedComment.comments === 'string' ? JSON.parse(parsedComment.comments) : parsedComment.comments;
+
+    activeCommentsInstance.value = parsedComment;
+  } else {
+    activeCommentsInstance.value = {};
+  }
 };
 
 const tiptapEditor = useEditor({
-  content:
-    '<p>I\'m trying to make comment <span data-comment="[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1635693990145,&quot;content&quot;:&quot;Initial Comment&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639101658784,&quot;content&quot;:&quot;Second comment&quot;}]">extension</span>, so you can add <span data-comment="[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639101673680,&quot;content&quot;:&quot;Adding a new comment here&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639101686073,&quot;content&quot;:&quot;So it should show up somewhere here&quot;}]">comment</span> here ☮️ and see how it goes.</p>',
+  content: '<p>Some more <span data-comment="{&quot;uuid&quot;:&quot;f198822e-489e-4236-b6b5-ccb6f878d3a4&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639238929974,&quot;content&quot;:&quot;one commnet&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639239856918,&quot;content&quot;:&quot;Mujhe pyaar karne waale, tu jaha he mai vaha hu, hame milna hi tha humdum, kisi raah bhi nikalte&quot;}]}">comment</span>. And more <span data-comment="{&quot;uuid&quot;:&quot;d4d37687-4c6b-4de3-b2dd-ddc9d00d91ed&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639238969321,&quot;content&quot;:&quot;Adding one more comment&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639239821584,&quot;content&quot;:&quot;Something&quot;}]}">comment</span>.</p>',
 
   extensions: [StarterKit, Comment],
 
@@ -271,19 +210,41 @@ const tiptapEditor = useEditor({
 });
 
 const setComment = () => {
+  debugger;
+
   if (!commentText.value.trim().length) return;
 
-  const comment = JSON.stringify([
-    ...activeComments.value,
-    {
+  const activeCommentInstance: CommentInstance = JSON.parse(JSON.stringify(activeCommentsInstance.value));
+
+  const commentsArray = typeof activeCommentInstance.comments === 'string' ? JSON.parse(activeCommentInstance.comments) : activeCommentInstance.comments;
+
+  if (commentsArray) {
+    commentsArray.push({
       userName: currentUserName.value,
       time: Date.now(),
       content: commentText.value,
-    },
-  ]);
+    });
 
-  // eslint-disable-next-line no-unused-expressions
-  tiptapEditor.value?.chain().setComment(comment).run();
+    const commentWithUuid = JSON.stringify({
+      uuid: activeCommentsInstance.value.uuid || uuidv4(),
+      comments: commentsArray,
+    });
+
+    // eslint-disable-next-line no-unused-expressions
+    tiptapEditor.value?.chain().setComment(commentWithUuid).run();
+  } else {
+    const commentWithUuid = JSON.stringify({
+      uuid: uuidv4(),
+      comments: [{
+        userName: currentUserName.value,
+        time: Date.now(),
+        content: commentText.value,
+      }],
+    });
+
+    // eslint-disable-next-line no-unused-expressions
+    tiptapEditor.value?.chain().setComment(commentWithUuid).run();
+  }
 
   setTimeout(() => (commentText.value = ''), 50);
 };
@@ -299,6 +260,10 @@ onMounted(() => setTimeout(findCommentsAndStoreValues, 100));
 
 <style lang="scss">
 .tiptap {
+  .tiptap-container {
+    min-width: 800px;
+  }
+
   .comment-section {
     article.comment {
       padding: 0.5em;
@@ -323,6 +288,10 @@ onMounted(() => setTimeout(findCommentsAndStoreValues, 100));
         Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       width: 100%;
     }
+  }
+
+  .external-comment {
+    width: 400px;
   }
 
   .comment-adder-section {
