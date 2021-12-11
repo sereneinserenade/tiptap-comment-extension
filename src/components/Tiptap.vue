@@ -21,15 +21,13 @@
       </section>
 
       <BubbleMenu
-        v-if="isCommentModeOn"
+        v-if="tiptapEditor && isCommentModeOn"
         :tippy-options="{ duration: 100, placement: 'bottom' }"
         :editor="tiptapEditor"
         class="bubble-menu"
+        :shouldShow="() => (isCommentModeOn && isTextSelected && !activeCommentsInstance.uuid)"
       >
-        <section
-          v-if="showAddCommentSection && !showCommentMenu"
-          class="comment-adder-section bg-white shadow-lg"
-        >
+        <section class="comment-adder-section bg-white shadow-lg" >
           <textarea
             v-model="commentText"
             @keypress.enter.stop.prevent="setComment"
@@ -56,7 +54,7 @@
 
     <section class="flex flex-col">
       <article
-        class="comment external-comment shadow-lg my-2 bg-gray-100 transition-all"
+        class="comment external-comment shadow-lg my-2 bg-gray-100 transition-all rounded-md overflow-hidden"
         v-for="(comment, i) in allComments"
         :key="i + 'external_comment'"
         :class="[`${comment.jsonComments.uuid === activeCommentsInstance.uuid ? 'ml-4' : 'ml-8'}`]"
@@ -128,6 +126,8 @@ const showCommentMenu = ref(false);
 
 const isCommentModeOn = ref(false);
 
+const isTextSelected = ref(false);
+
 const showAddCommentSection = ref(true);
 
 interface CommentInstance {
@@ -188,7 +188,7 @@ const setCurrentComment = (editor: any) => {
 };
 
 const tiptapEditor = useEditor({
-  content: '<p>Some more <span data-comment="{&quot;uuid&quot;:&quot;f198822e-489e-4236-b6b5-ccb6f878d3a4&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639238929974,&quot;content&quot;:&quot;one commnet&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639239856918,&quot;content&quot;:&quot;Mujhe pyaar karne waale, tu jaha he mai vaha hu, hame milna hi tha humdum, kisi raah bhi nikalte&quot;}]}">comment</span>. And more <span data-comment="{&quot;uuid&quot;:&quot;d4d37687-4c6b-4de3-b2dd-ddc9d00d91ed&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639238969321,&quot;content&quot;:&quot;Adding one more comment&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639239821584,&quot;content&quot;:&quot;Something&quot;}]}">comment</span>.</p>',
+  content: '<p>I\'m trying to make comment extension, so you<span data-comment="{&quot;uuid&quot;:&quot;cc3d6027-4500-484e-a26a-146371c210ff&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256036089,&quot;content&quot;:&quot;Talking with myself&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256052643,&quot;content&quot;:&quot;Actually no, I am making a video/demo for you guys&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256065012,&quot;content&quot;:&quot;And there you go&quot;}]}"> can add comm</span>ent here ☮️ and see how it goes. Add a comment <span data-comment="{&quot;uuid&quot;:&quot;a077d444-2c4d-4ccf-958b-8f3fcc33dd27&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256014964,&quot;content&quot;:&quot;A new world of comments&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256023904,&quot;content&quot;:&quot;Ah, so the last of us 2 is out&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256027778,&quot;content&quot;:&quot;Yes, it is&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256059546,&quot;content&quot;:&quot;Ah some more&quot;}]}">HERE.</span></p>',
 
   extensions: [StarterKit, Comment],
 
@@ -200,6 +200,8 @@ const tiptapEditor = useEditor({
 
   onSelectionUpdate({ editor }) {
     setCurrentComment(editor);
+
+    isTextSelected.value = !!editor.state.selection.content().size;
   },
 
   editorProps: {
