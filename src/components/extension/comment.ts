@@ -4,6 +4,7 @@ import { Plugin, TextSelection } from 'prosemirror-state';
 
 export interface CommentOptions {
   HTMLAttributes: Record<string, any>,
+  selectCommentTextOnClick: boolean,
 }
 
 declare module '@tiptap/core' {
@@ -31,6 +32,7 @@ export const Comment = Mark.create<CommentOptions>({
   addOptions() {
     return {
       HTMLAttributes: {},
+      selectCommentTextOnClick: false,
     };
   },
 
@@ -66,10 +68,14 @@ export const Comment = Mark.create<CommentOptions>({
   },
 
   addProseMirrorPlugins() {
+    const { selectCommentTextOnClick } = this.options;
+
     return [
       new Plugin({
         props: {
           handleClick(view, pos) {
+            if (!selectCommentTextOnClick) return false;
+
             const { schema, doc, tr } = view.state;
 
             const range = getMarkRange(doc.resolve(pos), schema.marks.comment);

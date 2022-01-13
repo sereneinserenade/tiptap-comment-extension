@@ -13,7 +13,7 @@
     />
 
     <section class="popup" :class="{ show: isCommentOpen }">
-      {{ node.attrs.comment }}
+      {{ node ? node.attrs.comment : '' }}
 
       <button class="close-button" @click="closeComment">
         X
@@ -22,7 +22,7 @@
   </node-view-wrapper>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, defineComponent } from 'vue';
 import { NodeViewWrapper, nodeViewProps, NodeViewContent } from '@tiptap/vue-3';
 
