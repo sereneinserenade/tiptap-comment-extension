@@ -17,7 +17,7 @@ I jest of course, I don't think you need documentation for this. Just take look 
 
 Show your ❤️ by ⭐️ing this repository. Your support means a lot. 
 
-Clone the repo, do something, make a PR(or not). You know what's the drill. Looking forward you amazing devs.
+Clone the repo, do something, make a PR(or not). You know what's the drill. Looking forward, you amazing devs.
 
 
 ## Stuff that nobody really cares about(Project setup)
