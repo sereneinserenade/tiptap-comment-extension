@@ -6,9 +6,7 @@
           @click="toggleCommentMode"
           type="button"
           class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-lg"
-        >
-          {{ isCommentModeOn ? "Comment mode ON" : "Comment mode OFF" }}
-        </button>
+        >{{ isCommentModeOn ? "Comment mode ON" : "Comment mode OFF" }}</button>
         <button
           @click="log(tiptapEditor.getHTML())"
           type="button"
@@ -27,7 +25,7 @@
         class="bubble-menu"
         :shouldShow="() => (isCommentModeOn && isTextSelected && !activeCommentsInstance.uuid)"
       >
-        <section class="comment-adder-section bg-white shadow-lg" >
+        <section class="comment-adder-section bg-white shadow-lg">
           <textarea
             v-model="commentText"
             @keypress.enter.stop.prevent="setComment"
@@ -73,7 +71,10 @@
           <span class="content">{{ jsonComment.content }}</span>
         </article>
 
-        <section v-if="comment.jsonComments.uuid === activeCommentsInstance.uuid" class="flex flex-col w-full gap-1">
+        <section
+          v-if="comment.jsonComments.uuid === activeCommentsInstance.uuid"
+          class="flex flex-col w-full gap-1"
+        >
           <textarea
             v-model="commentText"
             @keypress.enter.stop.prevent="setComment"
@@ -87,15 +88,14 @@
             <button
               class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded-lg shadow-lg w-1/3"
               @click="() => (commentText = '')"
-            >
-              Clear
-            </button>
+            >Clear</button>
 
             <button
               class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-lg shadow-lg w-2/3"
               @click="setComment"
             >
-              Add (<kbd class="">Ent</kbd>)
+              Add (
+              <kbd class>Ent</kbd>)
             </button>
           </section>
         </section>
@@ -105,87 +105,96 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
-import StarterKit from '@tiptap/starter-kit';
-import format from 'date-fns/format';
-import { v4 as uuidv4 } from 'uuid';
+/* eslint-disable import/no-extraneous-dependencies */
+import { onMounted, ref } from 'vue'
+import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3'
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+import format from 'date-fns/format'
+import { v4 as uuidv4 } from 'uuid'
 
-import { Comment } from './extension/comment';
+import { Comment } from './extension/comment'
 /* imports over */
 
-const dateTimeFormat = 'dd.MM.yyyy HH:mm';
+const dateTimeFormat = 'dd.MM.yyyy HH:mm'
 
-const formatDate = (d: any) => (d ? format(new Date(d), dateTimeFormat) : null);
+const formatDate = (d: any) => (d ? format(new Date(d), dateTimeFormat) : null)
 
-const currentUserName = ref('sereneinserenade');
+const currentUserName = ref('sereneinserenade')
 
-const commentText = ref('');
+const commentText = ref('')
 
-const showCommentMenu = ref(false);
+const showCommentMenu = ref(false)
 
-const isCommentModeOn = ref(false);
+const isCommentModeOn = ref(false)
 
-const isTextSelected = ref(false);
+const isTextSelected = ref(false)
 
-const showAddCommentSection = ref(true);
+const showAddCommentSection = ref(true)
 
 interface CommentInstance {
   uuid?: string
   comments?: any[]
 }
 
-const activeCommentsInstance = ref<CommentInstance>({});
+const activeCommentsInstance = ref<CommentInstance>({})
 
-const allComments = ref<any[]>([]);
+const allComments = ref<any[]>([])
 
-const findCommentsAndStoreValues = () => {
-  const proseMirror = document.querySelector('.ProseMirror');
+const findCommentsAndStoreValues = (editor: Editor) => {
+  const tempComments: any[] = []
 
-  const comments = proseMirror?.querySelectorAll('span[data-comment]');
+  const { doc } = editor.state
 
-  const tempComments: any[] = [];
+  doc.descendants((node, pos) => {
+    debugger
 
-  if (!comments) {
-    allComments.value = [];
-    return;
+    const { marks } = node
+
+    marks.forEach((mark) => {
+      if (mark.type.name === 'comment') {
+        const markComments = mark.attrs.comment;
+
+        const jsonComments = markComments ? JSON.parse(markComments) : null;
+
+        if (jsonComments !== null) {
+          tempComments.push({
+            node,
+            jsonComments,
+            pos,
+          });
+        }
+      }
+    })
+  })
+
+  if (!tempComments.length) {
+    allComments.value = []
+    return
   }
 
-  comments.forEach((node) => {
-    const nodeComments = node.getAttribute('data-comment');
+  allComments.value = tempComments
+}
 
-    const jsonComments = nodeComments ? JSON.parse(nodeComments) : null;
+const { log } = console
 
-    if (jsonComments !== null) {
-      tempComments.push({
-        node,
-        jsonComments,
-      });
-    }
-  });
-
-  allComments.value = tempComments;
-};
-
-const { log } = console;
-
-const setCurrentComment = (editor: any) => {
-  const newVal = editor.isActive('comment');
+const setCurrentComment = (editor: Editor) => {
+  const newVal = editor.isActive('comment')
 
   if (newVal) {
-    setTimeout(() => (showCommentMenu.value = newVal), 50);
+    setTimeout(() => (showCommentMenu.value = newVal), 50)
 
-    showAddCommentSection.value = !editor.state.selection.empty;
+    showAddCommentSection.value = !editor.state.selection.empty
 
-    const parsedComment = JSON.parse(editor.getAttributes('comment').comment);
+    const parsedComment = JSON.parse(editor.getAttributes('comment').comment)
 
-    parsedComment.comment = typeof parsedComment.comments === 'string' ? JSON.parse(parsedComment.comments) : parsedComment.comments;
+    parsedComment.comment = typeof parsedComment.comments === 'string' ? JSON.parse(parsedComment.comments) : parsedComment.comments
 
-    activeCommentsInstance.value = parsedComment;
+    activeCommentsInstance.value = parsedComment
   } else {
-    activeCommentsInstance.value = {};
+    activeCommentsInstance.value = {}
   }
-};
+}
 
 const tiptapEditor = useEditor({
   content: '<p>I\'m trying to make comment extension, so you<span data-comment="{&quot;uuid&quot;:&quot;cc3d6027-4500-484e-a26a-146371c210ff&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256036089,&quot;content&quot;:&quot;Talking with myself&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256052643,&quot;content&quot;:&quot;Actually no, I am making a video/demo for you guys&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256065012,&quot;content&quot;:&quot;And there you go&quot;}]}"> can add comm</span>ent here ☮️ and see how it goes. Add a comment <span data-comment="{&quot;uuid&quot;:&quot;a077d444-2c4d-4ccf-958b-8f3fcc33dd27&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256014964,&quot;content&quot;:&quot;A new world of comments&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256023904,&quot;content&quot;:&quot;Ah, so the last of us 2 is out&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256027778,&quot;content&quot;:&quot;Yes, it is&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256059546,&quot;content&quot;:&quot;Ah some more&quot;}]}">HERE.</span></p>',
@@ -193,15 +202,19 @@ const tiptapEditor = useEditor({
   extensions: [StarterKit, Comment],
 
   onUpdate({ editor }) {
-    findCommentsAndStoreValues();
+    findCommentsAndStoreValues(editor)
 
-    setCurrentComment(editor);
+    setCurrentComment(editor)
   },
 
   onSelectionUpdate({ editor }) {
-    setCurrentComment(editor);
+    setCurrentComment(editor)
 
-    isTextSelected.value = !!editor.state.selection.content().size;
+    isTextSelected.value = !!editor.state.selection.content().size
+  },
+
+  onCreate({ editor }) {
+    findCommentsAndStoreValues(editor)
   },
 
   editorProps: {
@@ -209,31 +222,29 @@ const tiptapEditor = useEditor({
       spellcheck: 'false',
     },
   },
-});
+})
 
 const setComment = () => {
-  debugger;
+  if (!commentText.value.trim().length) return
 
-  if (!commentText.value.trim().length) return;
+  const activeCommentInstance: CommentInstance = JSON.parse(JSON.stringify(activeCommentsInstance.value))
 
-  const activeCommentInstance: CommentInstance = JSON.parse(JSON.stringify(activeCommentsInstance.value));
-
-  const commentsArray = typeof activeCommentInstance.comments === 'string' ? JSON.parse(activeCommentInstance.comments) : activeCommentInstance.comments;
+  const commentsArray = typeof activeCommentInstance.comments === 'string' ? JSON.parse(activeCommentInstance.comments) : activeCommentInstance.comments
 
   if (commentsArray) {
     commentsArray.push({
       userName: currentUserName.value,
       time: Date.now(),
       content: commentText.value,
-    });
+    })
 
     const commentWithUuid = JSON.stringify({
       uuid: activeCommentsInstance.value.uuid || uuidv4(),
       comments: commentsArray,
-    });
+    })
 
     // eslint-disable-next-line no-unused-expressions
-    tiptapEditor.value?.chain().setComment(commentWithUuid).run();
+    tiptapEditor.value?.chain().setComment(commentWithUuid).run()
   } else {
     const commentWithUuid = JSON.stringify({
       uuid: uuidv4(),
@@ -242,22 +253,20 @@ const setComment = () => {
         time: Date.now(),
         content: commentText.value,
       }],
-    });
+    })
 
     // eslint-disable-next-line no-unused-expressions
-    tiptapEditor.value?.chain().setComment(commentWithUuid).run();
+    tiptapEditor.value?.chain().setComment(commentWithUuid).run()
   }
 
-  setTimeout(() => (commentText.value = ''), 50);
-};
+  setTimeout(() => (commentText.value = ''), 50)
+}
 
 const toggleCommentMode = () => {
-  isCommentModeOn.value = !isCommentModeOn.value;
-  if (isCommentModeOn.value) tiptapEditor.value.setEditable(false);
-  else tiptapEditor.value.setEditable(true);
-};
-
-onMounted(() => setTimeout(findCommentsAndStoreValues, 100));
+  isCommentModeOn.value = !isCommentModeOn.value
+  if (isCommentModeOn.value) tiptapEditor.value.setEditable(false)
+  else tiptapEditor.value.setEditable(true)
+}
 </script>
 
 <style lang="scss">
