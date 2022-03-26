@@ -6,7 +6,9 @@
     :class="[`${comment.jsonComments.uuid === activeCommentsInstance.uuid ? 'ml-4' : 'ml-8 cursor-pointer'}`]"
     @click.stop.prevent="focusContent({ from: comment.from, to: comment.to })"
   >
-    <article class="text-lg font-bold p-3 border-b-2 border-solid">"{{ comment.text }}" 💬</article>
+    <article
+      class="text-lg font-bold p-3 border-b-2 border-solid"
+    >{{ i + 1 }}. "{{ comment.text }}" 💬</article>
 
     <article
       v-for="(jsonComment, j) in comment.jsonComments.comments"

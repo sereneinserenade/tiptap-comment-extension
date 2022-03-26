@@ -155,7 +155,7 @@ const setCurrentComment = (editor: Editor) => {
 
 const tiptapEditor = useEditor({
   content: `
-    <p>I'm trying to make comment extension, so you can add comment here ☮️ and see how it goes. Add a comment here.</p>
+    <p>I'm trying to make comment extension, so you can add comment here ☮️ and<span data-comment="{&quot;uuid&quot;:&quot;d1858137-e0d8-48ac-9f38-ae778b56c719&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1648338852939,&quot;content&quot;:&quot;First comment&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1648338857073,&quot;content&quot;:&quot;Following Comment&quot;}]}"> see how it goes.</span> Add a <span data-comment="{&quot;uuid&quot;:&quot;f57e894f-926c-4242-b0ee-53c719631907&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1648338869890,&quot;content&quot;:&quot;second comment&quot;}]}">comment</span> here.</p>
   `,
 
   extensions: [StarterKit, Comment],
