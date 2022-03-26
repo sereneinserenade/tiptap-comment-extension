@@ -1,12 +1,12 @@
 <template>
-  <div class="m-4 flex flex-row tiptap">
+  <div class="p-4 h-full flex flex-row tiptap bg-gray-900 text-white">
     <div class="ml-4 flex flex-col tiptap-container">
       <section class="flex gap-4">
         <button
           @click="toggleCommentMode"
           type="button"
           class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-lg"
-        >{{ isCommentModeOn ? "Comment mode ON" : "Comment mode OFF" }}</button>
+        >{{ isCommentModeOn ? "Comment mode is ON" : "Comment mode OFF" }}</button>
         <button
           @click="log(tiptapEditor.getHTML())"
           type="button"
@@ -25,7 +25,7 @@
         class="bubble-menu"
         :shouldShow="() => (isCommentModeOn && isTextSelected && !activeCommentsInstance.uuid)"
       >
-        <section class="comment-adder-section flex bg-white shadow-lg p-3 rounded-md gap-4">
+        <section class="comment-adder-section flex bg-gray-800 shadow-lg p-3 rounded-md gap-4">
           <section aria-label="textarea-section">
             <textarea
               v-model="commentText"
@@ -33,20 +33,23 @@
               cols="30"
               rows="4"
               placeholder="Add new comment..."
-              class="border-blue-500 outline-white shadow-inner"
+              class="bg-gray-600 border-blue-500 outline-none shadow-inner"
             />
           </section>
 
           <section class="flex flex-row w-full gap-1">
             <button
-              class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded-2xl shadow-sm w-1/3"
+              class="bg-transparent hover:bg-red-400 text-red-500 font-semibold hover:text-white py-2 px-4 border border-red-400 hover:border-transparent rounded-2xl shadow-sm w-1/3"
               @click="() => commentText = ''"
             >Clear</button>
 
             <button
-              class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-2xl shadow-sm w-2/3"
+              class="bg-transparent hover:bg-blue-400 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-400 hover:border-transparent rounded-2xl shadow-sm w-2/3"
               @click="() => setComment()"
-            >Add</button>
+            >
+              Add
+              <kbd class>(Ent)</kbd>
+            </button>
           </section>
         </section>
       </BubbleMenu>
@@ -152,7 +155,7 @@ const setCurrentComment = (editor: Editor) => {
 
 const tiptapEditor = useEditor({
   content: `
-    <p>I'm trying to make comment extension, so you<span data-comment="{&quot;uuid&quot;:&quot;cc3d6027-4500-484e-a26a-146371c210ff&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256036089,&quot;content&quot;:&quot;Talking with myself&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256052643,&quot;content&quot;:&quot;Actually no, I am making a video/demo for you guys&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1639256065012,&quot;content&quot;:&quot;And there you go&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1646579995557,&quot;content&quot;:&quot;adding here&quot;}]}"> can add comm</span>ent here ☮️ and see how it goes. Add a comment here.</p>
+    <p>I'm trying to make comment extension, so you can add comment here ☮️ and see how it goes. Add a comment here.</p>
   `,
 
   extensions: [StarterKit, Comment],
@@ -229,6 +232,8 @@ const toggleCommentMode = () => {
 const focusContent = ({ from, to }: { from: number, to: number }) => {
   tiptapEditor.value.chain().setTextSelection({ from, to }).run()
 }
+
+onMounted(() => toggleCommentMode())
 </script>
 
 <style lang="scss">
@@ -241,7 +246,6 @@ const focusContent = ({ from, to }: { from: number, to: number }) => {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    background: white;
 
     textarea {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
