@@ -2,10 +2,11 @@
 
 Extension for having google docs like commenting in TipTap. Give a ⭐️ to the repo if you 👍 / ❤️  what I'm doing.
 
-Note: this is ___vue 3 version___. For those looking for a ___React implementation___, the repo is [here](https://github.com/sereneinserenade/tiptap-comment-extension-react).
+**Note**: this is ___vue 3 version___. For those looking for a ___React implementation___, the repo is [here](https://github.com/sereneinserenade/tiptap-comment-extension-react).
 
-https://user-images.githubusercontent.com/45892659/145692849-a73b6a60-8f64-4cfb-926e-7bb2f7671e9f.mov
+## Demo (truly detailed):
 
+https://user-images.githubusercontent.com/45892659/160260884-34b77b9f-3fb3-4ddf-af1d-066659b12774.mp4
 
 ## How to use
 
