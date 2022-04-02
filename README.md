@@ -23,6 +23,10 @@ Show your ❤️ by ⭐️ing this repository. Your support means a lot.
 Clone the repo, do something, make a PR(or not). You know what's the drill. Looking forward, you amazing devs.
 
 
+## Stargazers
+[![Stargazers repo roster for @sereneinserenade/tiptap-comment-extension](https://reporoster.com/stars/dark/sereneinserenade/tiptap-comment-extension)](https://github.com/sereneinserenade/tiptap-comment-extension/stargazers)
+
+
 ## Stuff that nobody really cares about(Project setup)
 ```
 npm install
