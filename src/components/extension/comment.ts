@@ -66,7 +66,7 @@ export const Comment = Mark.create<CommentOptions>({
   },
 
   addProseMirrorPlugins() {
-    return [
+    const plugins = [
       new Plugin({
         props: {
           handleClick(view, pos) {
@@ -84,6 +84,9 @@ export const Comment = Mark.create<CommentOptions>({
           },
         },
       }),
-    ];
+    ]
+
+    // not adding the plugin that selects the text when selected because I think it should not be done when the core comment text is editable.
+    return [];
   },
 });

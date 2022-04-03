@@ -74,6 +74,7 @@ interface Props {
   activeCommentsInstance: CommentInstance
   focusContent: ({ from, to }: { from: number, to: number }) => void
   formatDate: (d: any) => string | null
+  isCommentModeOn: boolean
 }
 
 const props = defineProps<Props>()
@@ -91,7 +92,7 @@ const setComment = () => {
 
 watch(activeCommentInstanceUuid, (val) => {
   setTimeout(() => {
-    if (!val) return
+    if (!val || !props.isCommentModeOn) return
 
     const activeTextArea: HTMLTextAreaElement = textareaRefs.value[val]
 
