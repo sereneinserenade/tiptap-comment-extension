@@ -61,6 +61,7 @@
         :all-comments="allComments"
         :format-date="formatDate"
         :focus-content="focusContent"
+        :is-comment-mode-on="isCommentModeOn"
         @set-comment="setComment"
       />
     </section>
