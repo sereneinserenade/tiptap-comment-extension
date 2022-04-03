@@ -12,7 +12,9 @@ https://user-images.githubusercontent.com/45892659/160260884-34b77b9f-3fb3-4ddf-
 
 ## How to use
 
-Copy the [comment.ts](src/components/extension/comment.ts) file in your extensions folder. You might have to change extension depending on whether you're using TypeScript or not. Enough of English, let's talk code.
+I wrote [a blog about](https://dev.to/sereneinserenade/how-i-implemented-google-docs-like-commenting-in-tiptap-k2k) how I implemented this. 
+
+TLDR; here's a short description. Copy the [comment.ts](src/components/extension/comment.ts) file in your extensions folder. You might have to change extension depending on whether you're using TypeScript or not. Enough of English, let's talk code.
 
 I jest of course, I don't think you need documentation for this. Just take look at [Tiptap.vue](src/components/Tiptap.vue) for an example implementation and come up with an implementation of your own(or just copy paste pretending this is some solution you found on StackOverflow). If there's any question or issues, I'll be at the [Bar](https://github.com/sereneinserenade/tiptap-comment-extension/issues)(reference to [Burn Butcher Burn](https://www.youtube.com/watch?v=qSxBVHqA-RU) from Withcer Season 2).
 
