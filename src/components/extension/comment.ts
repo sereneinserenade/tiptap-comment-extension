@@ -4,6 +4,7 @@ import { Plugin, TextSelection } from 'prosemirror-state';
 
 export interface CommentOptions {
   HTMLAttributes: Record<string, any>,
+  isCommentModeOn: () => boolean
 }
 
 declare module '@tiptap/core' {
@@ -31,6 +32,7 @@ export const Comment = Mark.create<CommentOptions>({
   addOptions() {
     return {
       HTMLAttributes: {},
+      isCommentModeOn: () => false,
     };
   },
 
@@ -66,10 +68,17 @@ export const Comment = Mark.create<CommentOptions>({
   },
 
   addProseMirrorPlugins() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const extensionThis = this
+
     const plugins = [
       new Plugin({
         props: {
           handleClick(view, pos) {
+            debugger
+
+            if (!extensionThis.options.isCommentModeOn()) return false
+
             const { schema, doc, tr } = view.state;
 
             const range = getMarkRange(doc.resolve(pos), schema.marks.comment);
@@ -86,7 +95,6 @@ export const Comment = Mark.create<CommentOptions>({
       }),
     ]
 
-    // not adding the plugin that selects the text when selected because I think it should not be done when the core comment text is editable.
-    return [];
+    return plugins;
   },
 });
