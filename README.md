@@ -12,7 +12,7 @@ A ⭐️ to the repo if you 👍 / ❤️  what I'm doing would be much apprecia
 
 ## Demo (truly detailed)
 
-- You can try it out at https://tiptap-comment-extension.vercel.app/
+- You can try it out at https://sereneinserenade.github.io/tiptap-comment-extension/
 
 https://user-images.githubusercontent.com/45892659/160260884-34b77b9f-3fb3-4ddf-af1d-066659b12774.mp4
 
