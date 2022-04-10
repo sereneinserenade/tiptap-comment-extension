@@ -2,15 +2,15 @@
   <img src="src/assets/logo-comment.svg" width="200"/>
 </p>
 
-# tiptap-comment-extension
+<h1 align="center"> tiptap-comment-extension </h1>
 
-[Tiptap Extension](https://tiptap.dev/guide/custom-extensions) for having Google-Docs like commenting in Tiptap.
+[Tiptap Extension](https://tiptap.dev/guide/custom-extensions) for having Google-Docs like pro-commenting in Tiptap.
 
 A ⭐️ to the repo if you 👍 / ❤️  what I'm doing would be much appreciated.
 
 > **Note**: This is __VUE 3 version__. [**REACT** peeps, here's your ride!](https://github.com/sereneinserenade/tiptap-comment-extension-react)
 
-## Demo (truly detailed):
+## Demo (truly detailed)
 
 - You can try it out at https://tiptap-comment-extension.vercel.app/
 
@@ -24,7 +24,7 @@ TLDR; here's a short description. Copy the [comment.ts](src/components/extension
 
 I jest of course, I don't think you need documentation for this. Just take look at [Tiptap.vue](src/components/Tiptap.vue) for an example implementation and come up with an implementation of your own(or just copy paste pretending this is some solution you found on StackOverflow). If there's any question or issues, I'll be [at the Bar](https://github.com/sereneinserenade/tiptap-comment-extension/issues)(ref to [Burn Butcher Burn](https://www.youtube.com/watch?v=qSxBVHqA-RU) from "The Witcher - Season 2").
 
-## contributing to the project.
+## Contributing
 
 Show your ❤️ by ⭐️ing this repository. Your support means a lot.
 
