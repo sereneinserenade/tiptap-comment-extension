@@ -1,21 +1,30 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <div id="app">
+    <tiptap />
+  </div>
 </template>
 
-<style>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import Tiptap from './components/Tiptap.vue';
+
+export default defineComponent({
+  name: 'App',
+  components: {
+    Tiptap,
+  },
+});
+</script>
+
+<style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  // text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  height: 100vh;
+  // margin-top: 60px;
 }
 </style>
