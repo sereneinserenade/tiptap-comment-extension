@@ -100,7 +100,7 @@ watch(activeCommentInstanceUuid, (val) => {
 </script>
 
 <style lang="scss">
-.external-comment-area {
+article.external-comment-area {
   width: 400px;
   box-shadow: 0 0 0 1px rgba($color: white, $alpha: 0.2);
 
