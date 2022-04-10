@@ -1,4 +1,8 @@
-# tiptap-comment-extension 💬
+<p align="center">
+  <img src="src/assets/logo-comment.svg" width="200"/>
+</p>
+
+# tiptap-comment-extension
 
 [Tiptap Extension](https://tiptap.dev/guide/custom-extensions) for having Google-Docs like commenting in Tiptap.
 
@@ -14,7 +18,7 @@ https://user-images.githubusercontent.com/45892659/160260884-34b77b9f-3fb3-4ddf-
 
 ## How to use
 
-I wrote [a blog about](https://dev.to/sereneinserenade/how-i-implemented-google-docs-like-commenting-in-tiptap-k2k) how I implemented this. 
+I wrote [a blog about](https://dev.to/sereneinserenade/how-i-implemented-google-docs-like-commenting-in-tiptap-k2k) how I implemented this.
 
 TLDR; here's a short description. Copy the [comment.ts](src/components/extension/comment.ts) file in your extensions folder. You might have to change extension depending on whether you're using TypeScript or not. Enough of English, let's talk code.
 
@@ -22,7 +26,7 @@ I jest of course, I don't think you need documentation for this. Just take look 
 
 ## contributing to the project.
 
-Show your ❤️ by ⭐️ing this repository. Your support means a lot. 
+Show your ❤️ by ⭐️ing this repository. Your support means a lot.
 
 Clone the repo, do something, make a PR(or not). You know what's the drill. Looking forward to your PRs, you amazing devs.
 
@@ -33,7 +37,7 @@ Clone the repo, do something, make a PR(or not). You know what's the drill. Look
 
 <details>
   <summary>Stuff that nobody really cares about (cause mostly, they already know it) </summary>
-  
+
   ## Project setup
   ```
   npm install
