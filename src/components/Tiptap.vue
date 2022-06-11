@@ -3,7 +3,9 @@
     <section class="editor-container flex flex-col">
       <section class="flex gap-2">
         <i-button @click="toggleCommentMode" type="button" class="">
-          {{ isCommentModeOn ? "Comment mode is ON" : "Comment mode OFF" }}
+          {{ isCommentModeOn ? "Comment mode is ON " : "Comment mode is OFF " }} &nbsp;
+          <icon-mdi-comment v-if="isCommentModeOn" /> 
+          <icon-mdi-comment-off v-else />
         </i-button>
         <i-button @click="log(tiptapEditor?.getHTML())" type="button" class="">
           HTML to Console

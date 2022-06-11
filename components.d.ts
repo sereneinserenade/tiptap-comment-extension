@@ -6,6 +6,8 @@ import '@vue/runtime-core'
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    IconMdiComment: typeof import('~icons/mdi/comment')['default']
+    IconMdiCommentOff: typeof import('~icons/mdi/comment-off')['default']
     IconMdiMoonWaningCrescent: typeof import('~icons/mdi/moon-waning-crescent')['default']
     IconMdiWhiteBalanceSunny: typeof import('~icons/mdi/white-balance-sunny')['default']
     OuterComment: typeof import('./src/components/OuterComment.vue')['default']
