@@ -14,7 +14,7 @@ A ⭐️ to the repo if you 👍 / ❤️  what I'm doing would be much apprecia
 
 - You can try it out at https://sereneinserenade.github.io/tiptap-comment-extension/
 
-https://user-images.githubusercontent.com/45892659/160260884-34b77b9f-3fb3-4ddf-af1d-066659b12774.mp4
+https://user-images.githubusercontent.com/45892659/173207471-db075cbc-f279-49a9-91ca-032237c7a2ac.mov
 
 ## How to use
 
