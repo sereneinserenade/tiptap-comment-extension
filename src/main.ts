@@ -1,6 +1,13 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import './index.css'
 
+import { Inkline, components } from '@inkline/inkline';
+import '@inkline/inkline/inkline.scss';
 
-createApp(App).mount('#app')
+import './index.scss'
+
+createApp(App).use(Inkline, {
+  components,
+  colorMode: 'system',
+  locale: 'en',
+}).mount('#app')

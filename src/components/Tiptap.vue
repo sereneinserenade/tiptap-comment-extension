@@ -1,70 +1,38 @@
 <template>
-  <div class="p-4 h-full flex flex-row tiptap bg-gray-900 text-white">
-    <div class="ml-4 flex flex-col tiptap-container">
-      <section class="flex gap-4">
-        <button
-          @click="toggleCommentMode"
-          type="button"
-          class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-lg"
-        >{{ isCommentModeOn ? "Comment mode is ON" : "Comment mode OFF" }}</button>
-        <button
-          @click="log(tiptapEditor?.getHTML())"
-          type="button"
-          class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded shadow-lg"
-        >HTML to Console</button>
+  <div class="tiptap flex container my-2 gap-2">
+    <section class="editor-container flex flex-col">
+      <section class="flex gap-2">
+        <i-button @click="toggleCommentMode" type="button" class="">
+          {{ isCommentModeOn ? "Comment mode is ON" : "Comment mode OFF" }}
+        </i-button>
+        <i-button @click="log(tiptapEditor?.getHTML())" type="button" class="">
+          HTML to Console
+        </i-button>
       </section>
 
       <section class="mt-6">
         <editor-content :editor="tiptapEditor" />
       </section>
 
-      <BubbleMenu
-        v-if="tiptapEditor && isCommentModeOn"
-        :tippy-options="{ duration: 100, placement: 'bottom' }"
-        :editor="tiptapEditor"
-        class="bubble-menu"
-        :shouldShow="() => (isCommentModeOn && isTextSelected && !activeCommentsInstance.uuid)"
-      >
-        <section class="comment-adder-section flex bg-gray-800 shadow-lg p-3 rounded-md gap-4">
-          <section aria-label="textarea-section">
-            <textarea
-              v-model="commentText"
-              @keypress.enter.stop.prevent="() => setComment()"
-              cols="30"
-              rows="4"
-              placeholder="Add new comment..."
-              class="bg-gray-600 border-blue-500 outline-none shadow-inner"
-            />
-          </section>
+      <BubbleMenu v-if="tiptapEditor" :tippy-options="{ duration: 100, placement: 'bottom' }"
+        :editor="tiptapEditor" :shouldShow="({ editor }) => (isCommentModeOn && !editor.state.selection.empty && !activeCommentsInstance.uuid)"
+        class="bubble-menu flex flex-col gap-2">
+        <i-textarea v-model="commentText" @keypress.enter.stop.prevent="() => setComment()" cols="30" rows="4"
+          placeholder="Add new comment..." />
 
-          <section class="flex flex-row w-full gap-1">
-            <button
-              class="bg-transparent hover:bg-red-400 text-red-500 font-semibold hover:text-white py-2 px-4 border border-red-400 hover:border-transparent rounded-2xl shadow-sm w-1/3"
-              @click="() => commentText = ''"
-            >Clear</button>
+        <section class="flex justify-end gap-2">
+          <i-button @click="() => commentText = ''">Clear</i-button>
 
-            <button
-              class="bg-transparent hover:bg-blue-400 text-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-400 hover:border-transparent rounded-2xl shadow-sm w-2/3"
-              @click="() => setComment()"
-            >
-              Add
-              <kbd class>(Ent)</kbd>
-            </button>
-          </section>
+          <i-button @click="() => setComment()">
+            Add &nbsp; <kbd> Ent </kbd>
+          </i-button>
         </section>
       </BubbleMenu>
-    </div>
-
-    <section class="flex flex-col">
-      <OuterCommentVue
-        :active-comments-instance="activeCommentsInstance"
-        :all-comments="allComments"
-        :format-date="formatDate"
-        :focus-content="focusContent"
-        :is-comment-mode-on="isCommentModeOn"
-        @set-comment="setComment"
-      />
     </section>
+
+    <OuterCommentVue :active-comments-instance="activeCommentsInstance" :all-comments="allComments"
+      :format-date="formatDate" :focus-content="focusContent" :is-comment-mode-on="isCommentModeOn"
+      @set-comment="setComment" />
   </div>
 </template>
 
@@ -241,21 +209,18 @@ onMounted(() => toggleCommentMode())
 
 <style lang="scss">
 .tiptap {
-  .tiptap-container {
-    min-width: 800px;
+  .editor-container {
+    width: 60%;
+    border: 1px dashed gray;
+    padding: 1rem;
+    border-radius: 8px;
   }
 
-  .comment-adder-section {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    textarea {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      border-radius: 6px;
-      padding: 0.5em;
-    }
+  .bubble-menu {
+    border: 1px dashed gray;
+    backdrop-filter: blur(2rem);
+    padding: 1rem;
+    border-radius: 8px;
   }
 
   .ProseMirror {

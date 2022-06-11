@@ -75,8 +75,6 @@ export const Comment = Mark.create<CommentOptions>({
       new Plugin({
         props: {
           handleClick(view, pos) {
-            debugger
-
             if (!extensionThis.options.isCommentModeOn()) return false
 
             const { schema, doc, tr } = view.state;
