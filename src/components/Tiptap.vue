@@ -1,45 +1,4 @@
-<template>
-  <div class="tiptap flex container my-2 gap-2">
-    <section class="editor-container flex flex-col">
-      <section class="flex gap-2">
-        <i-button @click="toggleCommentMode" type="button" class="">
-          {{ isCommentModeOn ? "Comment mode is ON " : "Comment mode is OFF " }} &nbsp;
-          <icon-mdi-comment v-if="isCommentModeOn" /> 
-          <icon-mdi-comment-off v-else />
-        </i-button>
-        <i-button @click="log(tiptapEditor?.getHTML())" type="button" class="">
-          HTML to Console
-        </i-button>
-      </section>
-
-      <section class="mt-6">
-        <editor-content :editor="tiptapEditor" />
-      </section>
-
-      <BubbleMenu v-if="tiptapEditor" :tippy-options="{ duration: 100, placement: 'bottom' }"
-        :editor="tiptapEditor" :shouldShow="({ editor }) => (isCommentModeOn && !editor.state.selection.empty && !activeCommentsInstance.uuid)"
-        class="bubble-menu flex flex-col gap-2">
-        <i-textarea v-model="commentText" @keypress.enter.stop.prevent="() => setComment()" cols="30" rows="4"
-          placeholder="Add new comment..." />
-
-        <section class="flex justify-end gap-2">
-          <i-button @click="() => commentText = ''">Clear</i-button>
-
-          <i-button @click="() => setComment()">
-            Add &nbsp; <kbd> Ent </kbd>
-          </i-button>
-        </section>
-      </BubbleMenu>
-    </section>
-
-    <OuterCommentVue :active-comments-instance="activeCommentsInstance" :all-comments="allComments"
-      :format-date="formatDate" :focus-content="focusContent" :is-comment-mode-on="isCommentModeOn"
-      @set-comment="setComment" />
-  </div>
-</template>
-
 <script setup lang="ts">
-/* eslint-disable import/no-extraneous-dependencies */
 import { onMounted, ref } from 'vue'
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3'
 import { Editor } from '@tiptap/core'
@@ -84,9 +43,9 @@ const findCommentsAndStoreValues = (editor: Editor) => {
 
     marks.forEach((mark) => {
       if (mark.type.name === 'comment') {
-        const markComments = mark.attrs.comment;
+        const markComments = mark.attrs.comment
 
-        const jsonComments = markComments ? JSON.parse(markComments) : null;
+        const jsonComments = markComments ? JSON.parse(markComments) : null
 
         if (jsonComments !== null) {
           tempComments.push({
@@ -95,7 +54,7 @@ const findCommentsAndStoreValues = (editor: Editor) => {
             from: pos,
             to: pos + (node.text?.length || 0),
             text: node.text,
-          });
+          })
         }
       }
     })
@@ -131,21 +90,21 @@ const tiptapEditor = useEditor({
     <p>I'm trying to make <span data-comment="{&quot;uuid&quot;:&quot;0b8803d1-5f95-4c08-abb8-265e79e2bb9e&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1654988104420,&quot;content&quot;:&quot;Adding a new comment&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1654988113766,&quot;content&quot;:&quot;Adding a new sub-comment&quot;},{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1654988130484,&quot;content&quot;:&quot;so that's how it works!&quot;}]}">comment extension</span>, so you can <span data-comment="{&quot;uuid&quot;:&quot;2f185c7e-e5e5-45d1-9748-3007bb3db928&quot;,&quot;comments&quot;:[{&quot;userName&quot;:&quot;sereneinserenade&quot;,&quot;time&quot;:1654988119128,&quot;content&quot;:&quot;new comment&quot;}]}">add comment</span> here ☮️ and see how it goes. Add a comment here.</p>
   `,
 
-  extensions: [StarterKit, Comment.configure({ isCommentModeOn: getIsCommentModeOn })],
+  extensions: [ StarterKit, Comment.configure({ isCommentModeOn: getIsCommentModeOn }) ],
 
-  onUpdate({ editor }) {
+  onUpdate ({ editor }) {
     findCommentsAndStoreValues(editor)
 
     setCurrentComment(editor)
   },
 
-  onSelectionUpdate({ editor }) {
+  onSelectionUpdate ({ editor }) {
     setCurrentComment(editor)
 
     isTextSelected.value = !!editor.state.selection.content().size
   },
 
-  onCreate({ editor }) {
+  onCreate ({ editor }) {
     findCommentsAndStoreValues(editor)
   },
 
@@ -182,11 +141,11 @@ const setComment = (val?: string) => {
   } else {
     const commentWithUuid = JSON.stringify({
       uuid: uuidv4(),
-      comments: [{
+      comments: [ {
         userName: currentUserName.value,
         time: Date.now(),
         content: localVal,
-      }],
+      } ],
     })
 
     // eslint-disable-next-line no-unused-expressions
@@ -209,6 +168,70 @@ const focusContent = ({ from, to }: { from: number, to: number }) => {
 onMounted(() => toggleCommentMode())
 </script>
 
+<template>
+  <div class="tiptap flex container my-2 gap-2">
+    <section class="editor-container flex flex-col">
+      <section class="flex gap-2">
+        <i-button
+          type="button"
+          class=""
+          @click="toggleCommentMode"
+        >
+          {{ isCommentModeOn ? "Comment mode is ON " : "Comment mode is OFF " }} &nbsp;
+          <icon-mdi-comment v-if="isCommentModeOn" />
+          <icon-mdi-comment-off v-else />
+        </i-button>
+        <i-button
+          type="button"
+          class=""
+          @click="log(tiptapEditor?.getHTML())"
+        >
+          HTML to Console
+        </i-button>
+      </section>
+
+      <section class="mt-6">
+        <editor-content :editor="tiptapEditor" />
+      </section>
+
+      <BubbleMenu
+        v-if="tiptapEditor"
+        :tippy-options="{ duration: 100, placement: 'bottom' }"
+        :editor="tiptapEditor"
+        :should-show="({ editor }) => (isCommentModeOn && !editor.state.selection.empty && !activeCommentsInstance.uuid)"
+        class="bubble-menu flex flex-col gap-2"
+      >
+        <i-textarea
+          v-model="commentText"
+          cols="30"
+          rows="4"
+          placeholder="Add new comment..."
+          @keypress.enter.stop.prevent="() => setComment()"
+        />
+
+        <section class="flex justify-end gap-2">
+          <i-button @click="() => commentText = ''">
+            Clear
+          </i-button>
+
+          <i-button @click="() => setComment()">
+            Add &nbsp; <kbd> ⏎ </kbd>
+          </i-button>
+        </section>
+      </BubbleMenu>
+    </section>
+
+    <OuterCommentVue
+      :active-comments-instance="activeCommentsInstance"
+      :all-comments="allComments"
+      :format-date="formatDate"
+      :focus-content="focusContent"
+      :is-comment-mode-on="isCommentModeOn"
+      @set-comment="setComment"
+    />
+  </div>
+</template>
+
 <style lang="scss">
 .tiptap {
   .editor-container {
@@ -216,6 +239,7 @@ onMounted(() => toggleCommentMode())
     border: 1px dashed gray;
     padding: 1rem;
     border-radius: 8px;
+    flex-grow: 0;
   }
 
   .bubble-menu {
@@ -233,12 +257,11 @@ onMounted(() => toggleCommentMode())
     }
 
     span[data-comment] {
-      background: rgba(172, 255, 47, 0.5);
-
-      &::after {
-        content: " 💬";
-        user-select: all;
-      }
+      background: rgba(250, 250, 0, 0.25);
+      border-bottom: 2px rgb(255, 183, 0) solid;
+      user-select: all;
+      padding: 0 2px 0 2px;
+      border-radius: 4px;
     }
   }
 }

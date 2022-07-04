@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore src",
+    "lintfix": "eslint --ext .js,.ts,.vue --ignore-path .gitignore --fix src",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@inkline/inkline": "^3.0.9",
@@ -18,8 +21,14 @@
   "devDependencies": {
     "@iconify-json/mdi": "^1.1.19",
     "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/parser": "^5.30.5",
     "@vitejs/plugin-vue": "^2.3.0",
+    "@vue/eslint-config-typescript": "^11.0.0",
     "autoprefixer": "^10.4.4",
+    "eslint": "^8.19.0",
+    "eslint-plugin-vue": "^9.1.1",
+    "husky": "^8.0.1",
     "postcss": "^8.4.12",
     "sass": "^1.52.3",
     "tailwindcss": "^3.0.23",
@@ -27,6 +36,7 @@
     "unplugin-icons": "^0.14.3",
     "unplugin-vue-components": "^0.19.6",
     "vite": "^2.9.0",
+    "vite-plugin-eslint": "^1.6.1",
     "vue-tsc": "^0.29.8"
   }
 }

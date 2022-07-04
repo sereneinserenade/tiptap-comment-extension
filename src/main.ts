@@ -1,8 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
-import { Inkline, components } from '@inkline/inkline';
-import '@inkline/inkline/inkline.scss';
+import { Inkline, components } from '@inkline/inkline'
+import '@inkline/inkline/inkline.scss'
 
 import './index.scss'
 

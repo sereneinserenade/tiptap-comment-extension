@@ -1,34 +1,47 @@
 <template>
   <section class="outer-comment-container flex flex-col gap-2">
-
-    <article class="main-comment external-comment-area flex flex-col gap-2 " v-for="(comment, i) in allComments"
+    <article
+      v-for="(comment, i) in allComments"
       :key="i + 'external_comment'"
+      class="main-comment external-comment-area flex flex-col gap-2 "
       :class="[`${comment.jsonComments.uuid === activeCommentsInstance.uuid ? 'active' : 'cursor-pointer'}`]"
-      @click.stop.prevent="focusContent({ from: comment.from, to: comment.to })">
-      <h2>{{ i + 1 }}. "{{ comment.text }}" 💬</h2>
-
-      <article v-for="(jsonComment, j) in comment.jsonComments.comments" :key="`${j}_${Math.random()}`"
-        class="sub-comment">
+      @click.stop.prevent="focusContent({ from: comment.from, to: comment.to })"
+    >
+      <article
+        v-for="(jsonComment, j) in comment.jsonComments.comments"
+        :key="`${j}_${Math.random()}`"
+        class="sub-comment"
+      >
         <div class="comment-details">
-          <strong>{{ jsonComment.userName }}</strong>
+          <strong class="text-md">{{ jsonComment.userName }}</strong>
 
-          <span class="ml-1 date-time text-xs">{{ formatDate(jsonComment.time) }}</span>
+          <span class="text-sm">{{ formatDate(jsonComment.time) }}</span>
         </div>
 
         <span class="content">{{ jsonComment.content }}</span>
       </article>
 
-      <section class="flex flex-col gap-2"
+      <section
+        v-if="comment.jsonComments.uuid === activeCommentsInstance.uuid"
+        class="flex flex-col gap-2"
         :class="[`${comment.jsonComments.uuid === activeCommentsInstance.uuid ? 'border-blue-900' : 'max-h-0 border-blue-300'}`]"
-        v-if="comment.jsonComments.uuid === activeCommentsInstance.uuid">
-        <i-textarea v-model="commentText" cols="30" rows="3" placeholder="Add comment..."
-          :ref="el => { textareaRefs[comment.jsonComments.uuid] = el }" @keypress.enter.stop.prevent="setComment" />
+      >
+        <i-textarea
+          :ref="el => { textareaRefs[comment.jsonComments.uuid] = el }"
+          v-model="commentText"
+          cols="30"
+          rows="3"
+          placeholder="Add comment..."
+          @keypress.enter.stop.prevent="setComment"
+        />
 
-        <section class="flex flex-row gap-2">
-          <i-button @click="() => (commentText = '')">Clear</i-button>
+        <section class="flex flex-row gap-2 justify-end">
+          <i-button @click="() => (commentText = '')">
+            Clear
+          </i-button>
 
           <i-button @click="setComment">
-            Add &nbsp; <kbd> Ent </kbd>
+            Add &nbsp; <kbd> ⏎ </kbd>
           </i-button>
         </section>
       </section>
@@ -44,7 +57,7 @@ interface CommentInstance {
   comments?: any[]
 }
 
-const emit = defineEmits(['setComment'])
+const emit = defineEmits([ 'setComment' ])
 
 interface Props {
   allComments: any[]
@@ -74,7 +87,7 @@ watch(activeCommentInstanceUuid, (val) => {
     const activeTextArea: HTMLTextAreaElement = textareaRefs.value[val]
 
     if (activeTextArea) activeTextArea.focus()
-  }, 100);
+  }, 100)
 })
 </script>
 
@@ -96,6 +109,20 @@ watch(activeCommentInstanceUuid, (val) => {
 
     &.active {
       transform: translateX(-2rem);
+    }
+
+    .comment-details {
+      display: flex;
+      gap: 4px;
+
+      .text-md {
+        align-self: flex-start;
+      }
+
+      .text-sm {
+        font-size: 12px;
+        align-self: flex-end;
+      }
     }
   }
 }

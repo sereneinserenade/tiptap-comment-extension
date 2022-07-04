@@ -1,15 +1,15 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
-import Tiptap from './components/Tiptap.vue';
-import ThemeSwitchButton from './components/ThemeSwitchButton.vue';
+import { defineComponent } from 'vue'
+import Tiptap from './components/Tiptap.vue'
+import ThemeSwitchButton from './components/ThemeSwitchButton.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
     Tiptap,
     ThemeSwitchButton
-},
-});
+  },
+})
 </script>
 
 <template>
