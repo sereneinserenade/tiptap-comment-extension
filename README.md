@@ -1,12 +1,16 @@
 <p align="center">
   <img src="src/assets/logo-comment.svg" width="200"/>
+  
+  ![GitHub Sponsors](https://img.shields.io/github/sponsors/sereneinserenade?color=%23bf3989&label=Sponsor%20Me&style=for-the-badge)
+  ![GitHub Repo stars](https://img.shields.io/github/stars/sereneinserenade/tiptap-comment-extension?label=Star%20the%20Repo&style=for-the-badge)
+  DM Me on Discord - sereneinserenade#4869
 </p>
 
-<h1 align="center"> tiptap-comment-extension </h1>
+<h1 align="center"> tiptap-comment-extension  </h1>
 
 [Tiptap Extension](https://tiptap.dev/guide/custom-extensions) for having Google-Docs like pro-commenting in Tiptap.
 
-A ⭐️ to the repo if you 👍 / ❤️  what I'm doing would be much appreciated.
+A ⭐️ to the repo if you 👍 / ❤️  what I'm doing would be much appreciated. If you're using this extension and making money from it, it'd be very kind of you to [:heart: Sponsor me](https://github.com/sponsors/laike9m). If you're looking for a **dev to work you on your project's Rich Text Editor** with or as **a frontend developer, [DM me on Discord/Twitter/LinkedIn](https://github.com/sereneinserenade)👨‍💻🤩.
 
 > **Note**: This is __VUE 3 version__. [**REACT** peeps, here's your ride!](https://github.com/sereneinserenade/tiptap-comment-extension-react)
 
@@ -26,7 +30,7 @@ I jest of course, I don't think you need documentation for this. Just take look 
 
 ## Contributing
 
-Show your ❤️ by ⭐️ing this repository. Your support means a lot.
+If you're making money from this extension or as gesture, it'd be very kind of you to **[:heart: Sponsor me](https://github.com/sponsors/laike9m)**. You can also show your ❤️ by ⭐️ing this repository. Your support means a lot.
 
 Clone the repo, do something, make a PR(or not). You know what's the drill. Looking forward to your PRs, you amazing devs.
 
