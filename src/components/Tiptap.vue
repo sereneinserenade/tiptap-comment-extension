@@ -40,6 +40,7 @@ const findCommentsAndStoreValues = (editor: Editor) => {
 
   editor.state.doc.descendants((node, pos) => {
     const { marks } = node
+    let pastCommentUuid = false
 
     marks.forEach((mark) => {
       if (mark.type.name === 'comment') {
@@ -47,7 +48,8 @@ const findCommentsAndStoreValues = (editor: Editor) => {
 
         const jsonComments = markComments ? JSON.parse(markComments) : null
 
-        if (jsonComments !== null) {
+        if (jsonComments !== null && pastCommentUuid !== jsonComments.uuid) {
+          pastCommentUuid = jsonComments.uuid;
           tempComments.push({
             node,
             jsonComments,
