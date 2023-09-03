@@ -77,6 +77,7 @@ export const Comment = Mark.create<CommentOptions, CommentStorage>({
 
     if (!marks.length) {
       this.storage.activeCommentId = null;
+      this.options.onCommentActivated(this.storage.activeCommentId);
       return;
     }
 

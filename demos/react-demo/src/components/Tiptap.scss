@@ -1,0 +1,7 @@
+.ProseMirror {
+  @apply focus:outline-none w-[768px] p-2;
+
+  .my-comment {
+    @apply bg-yellow-700 border-b-2 border-yellow-200;
+  }
+}
