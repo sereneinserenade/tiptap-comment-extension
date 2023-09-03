@@ -22,7 +22,26 @@ I've made a bunch of extensions for Tiptap 2, some of them are **Resiable Images
 npm i @sereneinserenade/tiptap-comment-extension
 ```
 
-https://github.com/sereneinserenade/tiptap-comment-extension/blob/main/demos/react/src/components/Tiptap.tsx#L77-L91
+```ts
+import StarterKit from "@tiptap/starter-kit";
+import Comment from "@sereneinserenade/tiptap-comment-extension";
+
+const extensions = [
+  StarterKit,
+  Comment.configure({
+    HTMLAttributes: {
+      class: "my-comment",
+    },
+    onCommentActivated: (commentId) => {
+      setActiveCommentId(commentId);
+
+      if (commentId) setTimeout(() => focusCommentWithActiveId(commentId));
+    },
+  }),
+];
+```
+
+For a demo, look at https://github.com/sereneinserenade/tiptap-comment-extension/blob/main/demos/react/src/components/Tiptap.tsx#L77-L91
 
 ## Stargazers
 
