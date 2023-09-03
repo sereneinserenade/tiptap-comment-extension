@@ -1,11 +1,3 @@
-import { Extension } from '@tiptap/core'
+export * from './comment';
 
-const MyExtension = Extension.create({
-  name: 'MyExtension',
-
-  // do your stuff here
-})
-
-export { MyExtension }
-
-export default MyExtension
+export default Comment;

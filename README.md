@@ -1,6 +1,6 @@
 # Comment
 
-A fresh Tiptap extension.
+Tiptap Comment extension
 
 ## Installation
 

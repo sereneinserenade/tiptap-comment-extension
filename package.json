@@ -1,7 +1,25 @@
 {
   "name": "@sereneinserenade/tiptap-comment-extension",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Tiptap Extension for adding comments",
+  "keywords": [
+    "tiptap-comment-extension",
+    "tiptap",
+    "tiptap-extension",
+    "wysiwyg",
+    "text editor",
+    "prosemirror"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sereneinserenade/tiptap-comment-extension/"
+  },
+  "author": "Jeet Mandaliya (github: sereneinserenade)",
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/sereneinserenade"
+  },
+  "license": "MIT",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
