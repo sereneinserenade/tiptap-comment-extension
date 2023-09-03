@@ -47,6 +47,30 @@ const extensions = [
 
 For more details, look at [react demo.](https://github.com/sereneinserenade/tiptap-comment-extension/blob/main/demos/react/src/components/Tiptap.tsx#L77-L91)
 
+## API:
+
+### Comment.configure
+
+```ts
+Comment.configure({
+  HTMLAttributes: {
+    class: "my-comment",
+  },
+  onCommentActivated: (commentId) => {
+    setActiveCommentId(commentId);
+
+    if (commentId) setTimeout(() => focusCommentWithActiveId(commentId));
+  },
+});
+```
+
+## Commands:
+
+- `setComment`: Sets the comment for the current selection with the given commentId. <br/>
+  Example: `editor.commands.setComment('<a-comment-id>')`
+- `unsetComment`: Unsets the comment for the given commentId. <br/>
+  Example: `editor.commands.setComment('<a-comment-id>')`
+
 ## Stargazers
 
 [![Stargazers repo roster for @sereneinserenade/tiptap-comment-extension](https://reporoster.com/stars/dark/sereneinserenade/tiptap-comment-extension)](https://github.com/sereneinserenade/tiptap-comment-extension/stargazers)
