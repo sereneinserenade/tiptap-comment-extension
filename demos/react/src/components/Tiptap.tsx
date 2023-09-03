@@ -1,7 +1,8 @@
 import { BubbleMenu, EditorContent, JSONContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-import { Comment } from '@sereneinserenade/tiptap-comment-extension'
+// import { Comment } from '@sereneinserenade/tiptap-comment-extension'
+import { Comment } from '../../../../src/comment'
 import { v4 } from 'uuid'
 
 import { CommentIcon } from './CommentIcon'
@@ -50,10 +51,10 @@ const Tiptap = () => {
 
   const commentsSectionRef = useRef<HTMLDivElement | null>(null)
 
-  const focusCommentWithActiveId = () => {
+  const focusCommentWithActiveId = (id: string) => {
     if (!commentsSectionRef.current) return
 
-    const commentInput = commentsSectionRef.current.querySelector<HTMLInputElement>(`input#${activeCommentId}`)
+    const commentInput = commentsSectionRef.current.querySelector<HTMLInputElement>(`input#${id}`)
 
     if (!commentInput) return
 
@@ -62,15 +63,15 @@ const Tiptap = () => {
       block: 'center',
       inline: 'center'
     })
-
-    commentInput.focus()
   }
 
   useEffect(
     () => {
-      focusCommentWithActiveId()
-    },
-    [activeCommentId]
+      if (!activeCommentId) return
+
+      focusCommentWithActiveId(activeCommentId)
+    }
+    , [activeCommentId]
   )
 
   const extensions = [
@@ -82,7 +83,8 @@ const Tiptap = () => {
         },
         onCommentActivated: (commentId) => {
           setActiveCommentId(commentId)
-          setTimeout(focusCommentWithActiveId)
+
+          if (commentId) setTimeout(() => focusCommentWithActiveId(commentId))
         }
       }
     )
@@ -103,11 +105,13 @@ const Tiptap = () => {
     editor?.commands.setComment(newComment.id)
 
     setActiveCommentId(newComment.id)
+
+    setTimeout(focusCommentWithActiveId)
   }
 
   return (
     <div className='flex gap-2 p-8'>
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor} className='prose prose-invert' />
       {
         editor && (
           <>
@@ -117,7 +121,7 @@ const Tiptap = () => {
                   comments.map(comment => (
                     <div
                       key={comment.id}
-                      className='flex flex-col gap-4 p-2 border rounded-lg border-slate-400'
+                      className={`flex flex-col gap-4 p-2 border rounded-lg border-slate-400 ${comment.id === activeCommentId ? 'border-blue-400 border-2' : ''} box-border`}
                     >
                       <span className='flex items-end gap-2'>
                         <a href='https://github.com/sereneinserenade' className='font-semibold border-b border-blue-200'>
@@ -132,7 +136,7 @@ const Tiptap = () => {
                       <input
                         value={comment.content || ''}
                         disabled={comment.id !== activeCommentId}
-                        className='p-2 bg-transparent rounded-lg text-inherit focus:outline-none focus:ring-2 ring-blue-200'
+                        className={`p-2 rounded-lg text-inherit bg-transparent focus:outline-none ${comment.id === activeCommentId ? 'bg-slate-600' : ''}`}
                         id={comment.id}
                         onInput={
                           (event) => {

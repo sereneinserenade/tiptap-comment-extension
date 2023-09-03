@@ -44,9 +44,8 @@ export const Comment = Mark.create<CommentOptions, CommentStorage>({
     return {
       commentId: {
         default: null,
-        parseHTML: (el) =>
-          (el as HTMLSpanElement).getAttribute("data-comment-id"),
-        renderHTML: (attrs) => ({ "data-comment-id": attrs.comment }),
+        parseHTML: (el) => (el as HTMLSpanElement).getAttribute("data-comment-id"),
+        renderHTML: (attrs) => ({ "data-comment-id": attrs.commentId }),
       },
     };
   },
