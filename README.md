@@ -8,13 +8,15 @@
 
 [Tiptap Extension](https://tiptap.dev/guide/custom-extensions) for having Google-Docs like pro-commenting in Tiptap.
 
-A ⭐️ to the repo if you 👍 / ❤️ what I'm doing would be much appreciated. If you're using this extension and making money from it, it'd be very kind of you to **[❤️ Sponsor me](https://github.com/sponsors/sereneinserenade)**. If you're looking for a **dev to work you on your project's Rich Text Editor** with or as \*\*a frontend developer, [DM me on Discord/Twitter/LinkedIn](https://github.com/sereneinserenade)👨‍💻🤩.
+A ⭐️ to the repo if you 👍 / ❤️ what I'm doing would be much appreciated. If you're using this extension and making money from it, it'd be very kind of you to **[❤️ Sponsor me](https://github.com/sponsors/sereneinserenade)**. If you're looking for a **dev to work you on your project's Rich Text Editor** with or as **a frontend developer**, [DM me on Discord/Twitter/LinkedIn](https://github.com/sereneinserenade)👨‍💻🤩.
 
 I've made a bunch of extensions for Tiptap 2, some of them are **Resiable Images And Videos**, **Search and Replace**, **LanguageTool integration** with tiptap. You can check it our here <https://github.com/sereneinserenade#a-glance-of-my-projects>.
 
-## Demo (truly detailed)
+## Demo:
 
-- You can try it out at <https://sereneinserenade.github.io/tiptap-comment-extension/>
+Try live demo: https://sereneinserenade.github.io/tiptap-comment-extension/
+
+https://github.com/sereneinserenade/tiptap-comment-extension/assets/45892659/5d66b6b7-7de0-4cc4-bfe4-0ec00d34aa4a
 
 ## How to use
 
