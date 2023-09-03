@@ -43,7 +43,7 @@ const extensions = [
 ];
 ```
 
-For a demo, look at https://github.com/sereneinserenade/tiptap-comment-extension/blob/main/demos/react/src/components/Tiptap.tsx#L77-L91
+For more details, look at [demo code](https://github.com/sereneinserenade/tiptap-comment-extension/blob/main/demos/react/src/components/Tiptap.tsx#L77-L91)
 
 ## Stargazers
 
