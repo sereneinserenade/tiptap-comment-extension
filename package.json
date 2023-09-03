@@ -1,6 +1,6 @@
 {
   "name": "@sereneinserenade/tiptap-comment-extension",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Tiptap Extension for adding comments",
   "keywords": [
     "tiptap-comment-extension",
