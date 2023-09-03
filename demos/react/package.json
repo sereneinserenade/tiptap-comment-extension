@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@sereneinserenade/tiptap-comment-extension": "^0.0.3",
+    "@sereneinserenade/tiptap-comment-extension": "^0.0.5",
     "@tiptap/react": "^2.1.7",
     "@tiptap/starter-kit": "^2.1.7",
     "class-variance-authority": "^0.7.0",
