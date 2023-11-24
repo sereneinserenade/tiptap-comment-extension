@@ -1,13 +1,11 @@
+import { useEffect, useRef, useState } from 'react'
 import { BubbleMenu, EditorContent, JSONContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 import { Comment } from '@sereneinserenade/tiptap-comment-extension'
-// import { Comment } from '../../../../src/comment'
 import { v4 } from 'uuid'
 
 import { CommentIcon } from './CommentIcon'
-
-import { useEffect, useRef, useState } from 'react'
 import './Tiptap.scss'
 
 const content: JSONContent = {
