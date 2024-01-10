@@ -30,7 +30,7 @@ export interface CommentStorage {
   activeCommentId: string | null;
 }
 
-export const Comment = Mark.create<CommentOptions, CommentStorage>({
+export const CommentExtension = Mark.create<CommentOptions, CommentStorage>({
   name: "comment",
 
   addOptions() {

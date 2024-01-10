@@ -1,3 +1,4 @@
 export * from './comment';
 
-export default Comment;
+export { CommentExtension as default } from './comment'
+
