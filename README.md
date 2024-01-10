@@ -28,7 +28,11 @@ npm i @sereneinserenade/tiptap-comment-extension
 
 ```ts
 import StarterKit from "@tiptap/starter-kit";
-import Comment from "@sereneinserenade/tiptap-comment-extension";
+import CommentExtension from "@sereneinserenade/tiptap-comment-extension";
+
+/* or
+import { CommentExtension } from "@sereneinserenade/tiptap-comment-extension";
+*/
 
 const extensions = [
   StarterKit,
