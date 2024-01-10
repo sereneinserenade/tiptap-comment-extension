@@ -44,7 +44,8 @@ export const CommentExtension = Mark.create<CommentOptions, CommentStorage>({
     return {
       commentId: {
         default: null,
-        parseHTML: (el) => (el as HTMLSpanElement).getAttribute("data-comment-id"),
+        parseHTML: (el) =>
+          (el as HTMLSpanElement).getAttribute("data-comment-id"),
         renderHTML: (attrs) => ({ "data-comment-id": attrs.commentId }),
       },
     };
@@ -115,7 +116,7 @@ export const CommentExtension = Mark.create<CommentOptions, CommentStorage>({
             const commentMark = node.marks.find(
               (mark) =>
                 mark.type.name === "comment" &&
-                mark.attrs.commentId === commentId
+                mark.attrs.commentId === commentId,
             );
 
             if (!commentMark) return;
