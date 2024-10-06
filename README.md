@@ -73,7 +73,7 @@ Comment.configure({
 - `setComment`: Sets the comment for the current selection with the given commentId. <br/>
   Example: `editor.commands.setComment('<a-comment-id>')`
 - `unsetComment`: Unsets the comment for the given commentId. <br/>
-  Example: `editor.commands.setComment('<a-comment-id>')`
+  Example: `editor.commands.unsetComment('<a-comment-id>')`
 
 ## Stargazers
 
