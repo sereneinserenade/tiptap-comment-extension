@@ -1,5 +1,6 @@
-import { Mark, mergeAttributes, Range } from "@tiptap/core";
-import { Mark as PMMark } from "@tiptap/pm/model";
+import { Mark, mergeAttributes } from "@tiptap/core";
+import type { Range } from "@tiptap/core";
+import type { Mark as PMMark } from "@tiptap/pm/model";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {

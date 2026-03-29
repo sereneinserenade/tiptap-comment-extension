@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "module": "ES2015",
+    "module": "ESNext",
     "lib": [
       "es2015",
       "dom"
     ],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "declaration": true,
     "noEmit": true,
     "rootDir": "./src",
