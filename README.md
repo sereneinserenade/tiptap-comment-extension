@@ -30,11 +30,7 @@ npm i @sereneinserenade/tiptap-comment-extension
 
 ```ts
 import StarterKit from "@tiptap/starter-kit";
-import CommentExtension from "@sereneinserenade/tiptap-comment-extension";
-
-/* or
-import { CommentExtension } from "@sereneinserenade/tiptap-comment-extension";
-*/
+import { Comment } from "@sereneinserenade/tiptap-comment-extension";
 
 const extensions = [
   StarterKit,
@@ -42,10 +38,13 @@ const extensions = [
     HTMLAttributes: {
       class: "my-comment",
     },
+    activeClass: "my-comment--active",
+    hoveredClass: "my-comment--hovered",
     onCommentActivated: (commentId) => {
       setActiveCommentId(commentId);
-
-      if (commentId) setTimeout(() => focusCommentWithActiveId(commentId));
+    },
+    onCommentSelectionChange: (commentIds) => {
+      setSelectedCommentIds(commentIds);
     },
   }),
 ];
@@ -62,10 +61,13 @@ Comment.configure({
   HTMLAttributes: {
     class: "my-comment",
   },
+  activeClass: "my-comment--active",
+  hoveredClass: "my-comment--hovered",
   onCommentActivated: (commentId) => {
     setActiveCommentId(commentId);
-
-    if (commentId) setTimeout(() => focusCommentWithActiveId(commentId));
+  },
+  onCommentSelectionChange: (commentIds) => {
+    setSelectedCommentIds(commentIds);
   },
 });
 ```
@@ -74,8 +76,23 @@ Comment.configure({
 
 - `setComment`: Sets the comment for the current selection with the given commentId. <br/>
   Example: `editor.commands.setComment('<a-comment-id>')`
-- `unsetComment`: Unsets the comment for the given commentId. <br/>
-  Example: `editor.commands.unsetComment('<a-comment-id>')`
+- `unsetComment`: Removes the comment mark from the current selection, or from a specific commentId when one is provided. <br/>
+  Example: `editor.commands.unsetComment()` or `editor.commands.unsetComment('<a-comment-id>')`
+- `removeComment`: Removes every range for the given commentId in the document. <br/>
+  Example: `editor.commands.removeComment('<a-comment-id>')`
+- `selectComment`: Selects the first logical range for the given commentId. <br/>
+  Example: `editor.commands.selectComment('<a-comment-id>')`
+- `hoverComment`: Sets or clears the hovered comment id for decoration-driven sidebars. <br/>
+  Example: `editor.commands.hoverComment('<a-comment-id>')`
+
+## Helpers:
+
+- `getCommentRanges(doc, commentId?)`: returns grouped logical ranges for comments, which is useful for building a sidebar without duplicating split inline segments.
+
+## Notes:
+
+- This package is still a lightweight mark-based anchor layer. Comment bodies, replies, resolved state, and persistence should live in your own app state.
+- Overlapping comments are not supported in the current mark-based model.
 
 ## Stargazers
 

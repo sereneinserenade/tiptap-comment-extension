@@ -79,6 +79,8 @@ const Tiptap = () => {
         HTMLAttributes: {
           class: 'my-comment'
         },
+        activeClass: 'ring-2 ring-blue-400',
+        hoveredClass: 'bg-blue-500/10',
         onCommentActivated: (commentId) => {
           setActiveCommentId(commentId)
 
@@ -120,6 +122,15 @@ const Tiptap = () => {
                     <div
                       key={comment.id}
                       className={`flex flex-col gap-4 p-2 border rounded-lg border-slate-400 ${comment.id === activeCommentId ? 'border-blue-400 border-2' : ''} box-border`}
+                      onClick={() => {
+                        editor.commands.selectComment(comment.id)
+                      }}
+                      onMouseEnter={() => {
+                        editor.commands.hoverComment(comment.id)
+                      }}
+                      onMouseLeave={() => {
+                        editor.commands.hoverComment(null)
+                      }}
                     >
                       <span className='flex items-end gap-2'>
                         <a href='https://github.com/sereneinserenade' className='font-semibold border-b border-blue-200'>
