@@ -32,3 +32,11 @@ test("publish workflow runs from published releases", () => {
   );
   assert.match(publishWorkflow, /github\.event\.release\.tag_name/);
 });
+
+test("publish workflow uses a trusted publishing compatible Node and npm", () => {
+  assert.match(publishWorkflow, /node-version:\s*"22\.14\.0"/);
+  assert.match(
+    publishWorkflow,
+    /npm install -g npm@latest/,
+  );
+});
