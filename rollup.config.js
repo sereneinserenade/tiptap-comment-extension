@@ -27,7 +27,14 @@ const config = {
     sourcemaps(),
     babel(),
     commonjs(),
-    typescript(),
+    typescript({
+      tsconfigOverride: {
+        compilerOptions: {
+          declaration: false,
+          noEmit: false,
+        },
+      },
+    }),
   ],
 };
 
