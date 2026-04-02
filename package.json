@@ -28,7 +28,7 @@
     "build": "npm run clean && npm run build:types && rollup -c",
     "build:types": "tsc --emitDeclarationOnly --declaration --noEmit false --outDir dist",
     "dev": "npm run clean && rollup -c -w",
-    "test": "node --test"
+    "test": "npm run build && node --test"
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^6.0.3",
